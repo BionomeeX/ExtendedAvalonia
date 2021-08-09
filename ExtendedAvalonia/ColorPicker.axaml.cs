@@ -10,6 +10,7 @@ namespace ExtendedAvalonia
 {
     public partial class ColorPicker : Window
     {
+        // Colors displayed by the small bar of the picker
         private Color[] _colors = new[]
         {
             Color.Red,
@@ -31,28 +32,34 @@ namespace ExtendedAvalonia
             {
                 var thumb = (Thumb)sender;
                 var measure = ((ILayoutable)thumb).PreviousMeasure;
+
+                // Value of the cursor
                 _value += e.Vector.X;
 
+                // Make sure we aren't out of bounds
                 var min = -Bounds.Width / 2f + thumb.Bounds.Width / 2f;
                 var max = -min;
                 if (_value < min) _value = min;
                 else if (_value > max) _value = max;
 
-                var targetColor = (_value - min) * _colors.Length / (max - min);
-
+                // Get between what colors we are in the small bar
+                var targetColor = (_value - min) * (_colors.Length - 1) / (max - min);
                 var minColor = _colors[(int)Math.Floor(targetColor)];
                 var maxColor = _colors[(int)Math.Ceiling(targetColor)];
 
+                // We are between 2 colors, we calculate where we are in it (0 is close to the left one and 1 to the right one)
                 var subTargetColor = targetColor - (int)targetColor;
 
-                Color color = Color.FromArgb(255,
-                    red:    minColor.R == maxColor.R ? minColor.R : (int)(subTargetColor * Math.Max(minColor.R, maxColor.R)),
-                    green:  minColor.G == maxColor.G ? minColor.G : (int)(subTargetColor * Math.Max(minColor.G, maxColor.G)),
-                    blue:   minColor.B == maxColor.B ? minColor.B : (int)(subTargetColor * Math.Max(minColor.B, maxColor.B))
-                    );
+                // Get RGB value of the color we are in
+                var red = GetColorValueBetween(minColor.R, maxColor.R, subTargetColor);
+                var green = GetColorValueBetween(minColor.G, maxColor.G, subTargetColor);
+                var blue = GetColorValueBetween(minColor.B, maxColor.B, subTargetColor);
+
+                Color color = Color.FromArgb(255, red, green, blue);
 
                 thumb.Arrange(new Rect(_value, 0, measure.Value.Width, measure.Value.Height));
 
+                // Renderer display a big square of our color
                 var renderer = this.FindControl<RenderView>("Renderer");
 
                 int[][] data = new int[(int)renderer.Bounds.Height][];
@@ -68,6 +75,29 @@ namespace ExtendedAvalonia
                 renderer.RenderData = data;
                 renderer.InvalidateVisual();
             };
+        }
+
+        /// <summary>
+        /// Returns the value between the 2 given in parameter
+        /// </summary>
+        /// <param name="first">First bound</param>
+        /// <param name="second">Second bound</param>
+        /// <param name="value">Value between the 2 others, between 0 and 1</param>
+        private byte GetColorValueBetween(byte first, byte second, double value)
+        {
+            // Our both bounds are the same, no calculation to do
+            if (first == second)
+            {
+                return first;
+            }
+            byte newValue = (byte)(value * Math.Max(first, second));
+            if (Math.Min(first, second) == 0) // If min value if 0, nothing else to do
+            {
+                return first > second ? (byte)(255 - newValue) : newValue;
+            }
+            // Else we need to make our value between min and max
+            newValue = (byte)((newValue * Math.Min(first, second) / 255) + Math.Min(first, second));
+            return first > second ? (byte)(255 - newValue + Math.Min(first, second)) : newValue;
         }
 
         double _value = 0.0;
