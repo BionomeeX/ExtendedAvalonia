@@ -46,9 +46,9 @@ namespace ExtendedAvalonia
                 var subTargetColor = targetColor - (int)targetColor;
 
                 Color color = Color.FromArgb(255,
-                    red: (int)(subTargetColor * Math.Max(minColor.R, maxColor.R)),
-                    green: (int)(subTargetColor * Math.Max(minColor.G, maxColor.G)),
-                    blue: (int)(subTargetColor * Math.Max(minColor.B, maxColor.B))
+                    red:    minColor.R == maxColor.R ? minColor.R : (int)(subTargetColor * Math.Max(minColor.R, maxColor.R)),
+                    green:  minColor.G == maxColor.G ? minColor.G : (int)(subTargetColor * Math.Max(minColor.G, maxColor.G)),
+                    blue:   minColor.B == maxColor.B ? minColor.B : (int)(subTargetColor * Math.Max(minColor.B, maxColor.B))
                     );
 
                 thumb.Arrange(new Rect(_value, 0, measure.Value.Width, measure.Value.Height));
