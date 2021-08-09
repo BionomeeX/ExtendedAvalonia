@@ -22,6 +22,24 @@ namespace ExtendedAvalonia
             Color.Red
         };
 
+        private double _value = 0.0;
+        internal Color CurrentColor { private set; get; }
+
+        public static void Show(Window parent, Action<Color> OnCompletion)
+        {
+            var picker = new ColorPicker();
+            picker.Show(parent);
+            picker.Closed += (sender, e) =>
+            {
+                OnCompletion?.Invoke(picker.CurrentColor);
+            };
+            picker.FindControl<Button>("Validate").Click += (sender, e) =>
+            {
+                OnCompletion?.Invoke(picker.CurrentColor);
+                picker.Close();
+            };
+        }
+
         public ColorPicker()
         {
             InitializeComponent();
@@ -30,51 +48,71 @@ namespace ExtendedAvalonia
 #endif
             this.FindControl<Thumb>("Thumb").DragDelta += (sender, e) =>
             {
-                var thumb = (Thumb)sender;
-                var measure = ((ILayoutable)thumb).PreviousMeasure;
-
                 // Value of the cursor
                 _value += e.Vector.X;
 
+                var (min, max) = GetMinMax();
+
                 // Make sure we aren't out of bounds
-                var min = -Bounds.Width / 2f + thumb.Bounds.Width / 2f;
-                var max = -min;
                 if (_value < min) _value = min;
                 else if (_value > max) _value = max;
 
-                // Get between what colors we are in the small bar
-                var targetColor = (_value - min) * (_colors.Length - 1) / (max - min);
-                var minColor = _colors[(int)Math.Floor(targetColor)];
-                var maxColor = _colors[(int)Math.Ceiling(targetColor)];
-
-                // We are between 2 colors, we calculate where we are in it (0 is close to the left one and 1 to the right one)
-                var subTargetColor = targetColor - (int)targetColor;
-
-                // Get RGB value of the color we are in
-                var red = GetColorValueBetween(minColor.R, maxColor.R, subTargetColor);
-                var green = GetColorValueBetween(minColor.G, maxColor.G, subTargetColor);
-                var blue = GetColorValueBetween(minColor.B, maxColor.B, subTargetColor);
-
-                Color color = Color.FromArgb(255, red, green, blue);
-
+                // Update position
+                var thumb = this.FindControl<Thumb>("Thumb");
+                var measure = ((ILayoutable)thumb).PreviousMeasure;
                 thumb.Arrange(new Rect(_value, 0, measure.Value.Width, measure.Value.Height));
 
-                // Renderer display a big square of our color
-                var renderer = this.FindControl<RenderView>("Renderer");
-
-                int[][] data = new int[(int)renderer.Bounds.Height][];
-                for (int y = 0; y < (int)renderer.Bounds.Height; y++)
-                {
-                    data[y] = new int[(int)renderer.Bounds.Width];
-                    for (int x = 0; x < (int)renderer.Bounds.Width; x++)
-                    {
-                        data[y][x] = color.ToArgb();
-                    }
-                }
-
-                renderer.RenderData = data;
-                renderer.InvalidateVisual();
+                DisplayColor();
             };
+            this.Opened += (sender, e) =>
+            {
+                DisplayColor();
+            };
+        }
+
+        private (double min, double max) GetMinMax()
+        {
+            var thumb = this.FindControl<Thumb>("Thumb");
+            var min = -Bounds.Width / 2f + thumb.Bounds.Width / 2f;
+            return (min, -min);
+        }
+
+        private void DisplayColor()
+        {
+            var (min, max) = GetMinMax();
+
+            // Get between what colors we are in the small bar
+            var targetColor = (_value - min) * (_colors.Length - 1) / (max - min);
+            var minColor = _colors[(int)Math.Floor(targetColor)];
+            var maxColor = _colors[(int)Math.Ceiling(targetColor)];
+
+            // We are between 2 colors, we calculate where we are in it (0 is close to the left one and 1 to the right one)
+            var subTargetColor = targetColor - (int)targetColor;
+
+            // Get RGB value of the color we are in
+            var red = GetColorValueBetween(minColor.R, maxColor.R, subTargetColor);
+            var green = GetColorValueBetween(minColor.G, maxColor.G, subTargetColor);
+            var blue = GetColorValueBetween(minColor.B, maxColor.B, subTargetColor);
+
+            CurrentColor = Color.FromArgb(255, red, green, blue);
+
+            // Renderer display a big square of our color
+            var renderer = this.FindControl<RenderView>("Renderer");
+
+            int[][] data = new int[(int)renderer.Bounds.Height][];
+            for (int y = 0; y < (int)renderer.Bounds.Height; y++)
+            {
+                data[y] = new int[(int)renderer.Bounds.Width];
+                for (int x = 0; x < (int)renderer.Bounds.Width; x++)
+                {
+                    data[y][x] = CurrentColor.ToArgb();
+                }
+            }
+
+            renderer.RenderData = data;
+            renderer.InvalidateVisual();
+
+            this.FindControl<TextBlock>("RGBValues").Text = $"(R: {CurrentColor.R}, G: {CurrentColor.G}, B: {CurrentColor.B})";
         }
 
         /// <summary>
@@ -99,8 +137,6 @@ namespace ExtendedAvalonia
             newValue = (byte)((newValue * Math.Min(first, second) / 255) + Math.Min(first, second));
             return first > second ? (byte)(255 - newValue + Math.Min(first, second)) : newValue;
         }
-
-        double _value = 0.0;
 
         private void InitializeComponent()
         {

@@ -11,10 +11,12 @@
     <Grid.RowDefinitions>
       <RowDefinition Height="*" />
       <RowDefinition Height="20" />
+      <RowDefinition Height="40" />
     </Grid.RowDefinitions>
 
     <v:RenderView Grid.Row="0"
                   Name="Renderer"></v:RenderView>
+
     <Border Name="ColorBackground"
             Grid.Row="1">
       <Border.Background>
@@ -38,5 +40,20 @@
         </Thumb.Template>
       </Thumb>
     </Border>
+
+    <Grid Grid.Row="2">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="40" />
+      </Grid.ColumnDefinitions>
+
+      <TextBlock VerticalAlignment="Center"
+                 Margin="10 0 0 0"
+                 FontSize="20"
+                 Name="RGBValues">RGB values</TextBlock>
+      <Button Grid.Column="1"
+              Name="Validate">OK</Button>
+    </Grid>
+
   </Grid>
 </Window>
