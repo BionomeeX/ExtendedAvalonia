@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using System;
 using System.Drawing;
@@ -21,8 +20,6 @@ namespace ExtendedAvalonia
             Color.Magenta,
             Color.Red
         };
-
-        private double _value = 0.0;
         internal Color CurrentColor { private set; get; }
 
         public static void Show(Window parent, Action<Color> OnCompletion)
@@ -46,22 +43,8 @@ namespace ExtendedAvalonia
 #if DEBUG
             this.AttachDevTools();
 #endif
-            this.FindControl<Thumb>("Thumb").DragDelta += (sender, e) =>
+            this.FindControl<ExtendedSlider>("Slider").DragDelta += (sender, e) =>
             {
-                // Value of the cursor
-                _value += e.Vector.X;
-
-                var (min, max) = GetMinMax();
-
-                // Make sure we aren't out of bounds
-                if (_value < min) _value = min;
-                else if (_value > max) _value = max;
-
-                // Update position
-                var thumb = this.FindControl<Thumb>("Thumb");
-                var measure = ((ILayoutable)thumb).PreviousMeasure;
-                thumb.Arrange(new Rect(_value, 0, measure.Value.Width, measure.Value.Height));
-
                 DisplayColor();
             };
             this.Opened += (sender, e) =>
@@ -70,19 +53,13 @@ namespace ExtendedAvalonia
             };
         }
 
-        private (double min, double max) GetMinMax()
-        {
-            var thumb = this.FindControl<Thumb>("Thumb");
-            var min = -Bounds.Width / 2f + thumb.Bounds.Width / 2f;
-            return (min, -min);
-        }
-
         private void DisplayColor()
         {
-            var (min, max) = GetMinMax();
+            var slider = this.FindControl<ExtendedSlider>("Slider");
+            var (min, max) = slider.GetMinMax();
 
             // Get between what colors we are in the small bar
-            var targetColor = (_value - min) * (_colors.Length - 1) / (max - min);
+            var targetColor = (slider.Value - min) * (_colors.Length - 1) / (max - min);
             var minColor = _colors[(int)Math.Floor(targetColor)];
             var maxColor = _colors[(int)Math.Ceiling(targetColor)];
 

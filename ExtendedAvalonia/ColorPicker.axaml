@@ -30,15 +30,7 @@
           <GradientStop Offset="1" Color="Red"/>
         </LinearGradientBrush>
       </Border.Background>
-      <Thumb Height="20" Width="20" Name="Thumb">
-        <Thumb.Template>
-          <ControlTemplate>
-            <Border BorderBrush="Black"
-                    BorderThickness="2"
-                    Background="Transparent"/>
-          </ControlTemplate>
-        </Thumb.Template>
-      </Thumb>
+      <v:ExtendedSlider Name="Slider"></v:ExtendedSlider>
     </Border>
 
     <Grid Grid.Row="2">
