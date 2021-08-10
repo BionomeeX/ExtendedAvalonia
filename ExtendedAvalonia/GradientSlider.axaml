@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="ExtendedAvalonia.GradientSlider"
+             xmlns:v="using:ExtendedAvalonia"
+             Width="300">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="20" />
+    </Grid.RowDefinitions>
+
+    <v:RenderView Grid.Row="0"
+                  Name="Renderer"></v:RenderView>
+
+    <Border Grid.Row="1"
+            Background="LightGray">
+      <Thumb Height="20" Width="20" Name="Thumb">
+        <Thumb.Template>
+          <ControlTemplate>
+            <Border BorderBrush="Black"
+                    BorderThickness="2"
+                    Background="Transparent"/>
+          </ControlTemplate>
+        </Thumb.Template>
+      </Thumb>
+    </Border>
+  </Grid>
+</UserControl>
