@@ -5,6 +5,7 @@
         Width="300" Height="300"
         x:Class="ExtendedAvalonia.ColorPicker"
         xmlns:v="using:ExtendedAvalonia"
+        xmlns:slider="using:ExtendedAvalonia.Slider"
         Title="ColorPicker"
         CanResize="False">
   <Grid>
@@ -30,7 +31,7 @@
           <GradientStop Offset="1" Color="Red"/>
         </LinearGradientBrush>
       </Border.Background>
-      <v:ExtendedSlider Name="Slider"></v:ExtendedSlider>
+      <slider:ExtendedSlider Name="Slider"></slider:ExtendedSlider>
     </Border>
 
     <Grid Grid.Row="2">

@@ -2,7 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using System.Drawing;
 
-namespace ExtendedAvalonia
+namespace ExtendedAvalonia.Slider
 {
     // https://github.com/funwaywang/WpfRangeSlider
     public partial class GradientSlider : UserControl

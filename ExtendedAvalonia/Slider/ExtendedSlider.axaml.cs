@@ -4,8 +4,9 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using System;
+using System.Collections.Generic;
 
-namespace ExtendedAvalonia
+namespace ExtendedAvalonia.Slider
 {
     public partial class ExtendedSlider : UserControl
     {
@@ -45,6 +46,8 @@ namespace ExtendedAvalonia
         }
 
         public event EventHandler DragDelta;
+
+        public List<SliderValue> Sliders { get; } = new();
 
         private void InitializeComponent()
         {
