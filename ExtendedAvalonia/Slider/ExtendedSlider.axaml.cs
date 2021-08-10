@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,10 @@ namespace ExtendedAvalonia.Slider
 
         public void AddThumb()
         {
-            var t = new ExtendedThumb();
+            var t = new ExtendedThumb
+            {
+                Width = int.MaxValue
+            };
             t.DragDelta += (sender, e) =>
             {
                 DragDelta?.Invoke(sender, e);
