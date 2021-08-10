@@ -53,7 +53,7 @@ namespace ExtendedAvalonia.Slider
             set
             {
                 _value = value;
-                InvalidateMeasure();
+                InvalidateVisual();
             }
             get
             {

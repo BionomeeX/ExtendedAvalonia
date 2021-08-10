@@ -13,14 +13,9 @@ namespace ExtendedAvalonia.Slider
         public ExtendedSlider()
         {
             InitializeComponent();
-        }
 
-        public override void Render(DrawingContext context)
-        {
-            base.Render(context);
-
+            AddThumb(-200.0);
             AddThumb(0.0);
-            AddThumb(20.0);
         }
 
         public void AddThumb(double position)
