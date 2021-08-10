@@ -3,7 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              x:Class="ExtendedAvalonia.Slider.GradientSlider"
-             xmlns:v="using:ExtendedAvalonia.Slider"
+             xmlns:v="using:ExtendedAvalonia"
+             xmlns:slider="using:ExtendedAvalonia.Slider"
              Width="300" Height="300">
   <Grid>
     <Grid.RowDefinitions>
@@ -12,11 +13,11 @@
       <RowDefinition Height="20" />
     </Grid.RowDefinitions>
 
-    <v:ExtendedSlider Grid.Row="0"
-                      Name="SliderUp"></v:ExtendedSlider>
+    <slider:ExtendedSlider Grid.Row="0"
+                      Name="SliderUp"></slider:ExtendedSlider>
     <v:RenderView Grid.Row="1"
                   Name="Renderer"></v:RenderView>
-    <v:ExtendedSlider Grid.Row="2"
-                      Name="Slider"></v:ExtendedSlider>
+    <slider:ExtendedSlider Grid.Row="2"
+                      Name="Slider"></slider:ExtendedSlider>
   </Grid>
 </UserControl>

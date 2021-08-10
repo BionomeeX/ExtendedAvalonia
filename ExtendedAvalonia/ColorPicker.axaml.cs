@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using ExtendedAvalonia.Slider;
 using System;
 using System.Drawing;
 
