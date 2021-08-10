@@ -39,7 +39,7 @@ namespace ExtendedAvalonia
 
         public (double min, double max) GetMinMax()
         {
-            var thumb = this.FindControl<ExtendedSlider>("Thumb");
+            var thumb = this.FindControl<Thumb>("Thumb");
             var min = -Bounds.Width / 2f + thumb.Bounds.Width / 2f;
             return (min, -min);
         }
