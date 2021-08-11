@@ -3,6 +3,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ExtendedAvalonia.Slider
 {
@@ -12,7 +13,18 @@ namespace ExtendedAvalonia.Slider
         {
             InitializeComponent();
 
-            AddThumb(0.0);
+            this.Initialized += (sender, e) =>
+            {
+                AddThumb(-20.0);
+                AddThumb(500.0);
+            };
+        }
+
+        public void AddThumb(double position)
+        {
+            _toAdd.Add(position);
+
+            InvalidateVisual();
         }
 
         private const int _thumbSize = 20;
@@ -20,6 +32,19 @@ namespace ExtendedAvalonia.Slider
         public override void Render(DrawingContext context)
         {
             base.Render(context);
+            var (min, max) = GetMinMax();
+
+            // We add thumbs there because window bounds might not be initialized in ctor
+            if (_toAdd.Count > 0)
+            {
+                Thumbs.AddRange(_toAdd.Select(x =>
+                {
+                    if (x < min) x = min;
+                    else if (x > max) x = max;
+                    return x;
+                }));
+                _toAdd.Clear();
+            }
 
             var renderer = this.FindControl<RenderView>("Renderer");
 
@@ -32,7 +57,6 @@ namespace ExtendedAvalonia.Slider
 
             var blackColor = System.Drawing.Color.Black.ToArgb();
             var halfThumbSize = _thumbSize / 2;
-            var (min, _) = GetMinMax();
 
             // Write thumbs
             foreach (var pos in Thumbs)
@@ -54,17 +78,6 @@ namespace ExtendedAvalonia.Slider
             renderer.InvalidateVisual();
         }
 
-        public void AddThumb(double position)
-        {
-            var (min, max) = GetMinMax();
-
-            if (position < min) position = min;
-            else if (position > max) position = max;
-            Thumbs.Add(position);
-
-            InvalidateVisual();
-        }
-
         public (double min, double max) GetMinMax()
         {
             var min = -Bounds.Width / 2f + _thumbSize / 2f;
@@ -73,6 +86,7 @@ namespace ExtendedAvalonia.Slider
 
         public event EventHandler DragDelta;
 
+        private List<double> _toAdd = new();
         public List<double> Thumbs { get; } = new();
 
         private void InitializeComponent()
