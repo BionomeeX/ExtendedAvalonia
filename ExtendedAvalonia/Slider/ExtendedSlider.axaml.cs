@@ -12,7 +12,6 @@ namespace ExtendedAvalonia.Slider
         {
             InitializeComponent();
 
-            AddThumb(20.0);
             AddThumb(0.0);
         }
 
@@ -33,20 +32,20 @@ namespace ExtendedAvalonia.Slider
 
             var blackColor = System.Drawing.Color.Black.ToArgb();
             var halfThumbSize = _thumbSize / 2;
-            var (min, max) = GetMinMax();
+            var (min, _) = GetMinMax();
 
             // Write thumbs
             foreach (var pos in Thumbs)
             {
                 for (int x = -halfThumbSize; x <= halfThumbSize; x++)
                 {
-                    data[0][(int)pos + x + (int)min] = blackColor;
-                    data[data.Length - 1][(int)pos + x + (int)min] = blackColor;
+                    data[0][(int)pos + x + (int)-min] = blackColor;
+                    data[data.Length - 1][(int)pos + x + (int)-min] = blackColor;
                 }
                 for (int y = 0; y < data.Length; y++)
                 {
-                    data[y][(int)pos - halfThumbSize] = blackColor;
-                    data[y][(int)pos + halfThumbSize] = blackColor;
+                    data[y][(int)pos - halfThumbSize + (int)-min] = blackColor;
+                    data[y][(int)pos + halfThumbSize + (int)-min] = blackColor;
                 }
             }
 
