@@ -4,6 +4,7 @@ using Avalonia.Markup.Xaml;
 using ExtendedAvalonia.Slider;
 using System;
 using System.Drawing;
+using System.Linq;
 
 namespace ExtendedAvalonia
 {
@@ -58,7 +59,7 @@ namespace ExtendedAvalonia
             var slider = this.FindControl<ExtendedSlider>("Slider");
             var (min, max) = slider.GetMinMax();
 
-            var value = slider.Thumbs.Count > 0 ? slider.Thumbs[0] : 0;
+            var value = slider.Thumbs.Any() ? slider.Thumbs.ElementAt(0) : 0;
 
             // Get between what colors we are in the small bar
             var targetColor = (value - min) * (_colors.Length - 1) / (max - min);

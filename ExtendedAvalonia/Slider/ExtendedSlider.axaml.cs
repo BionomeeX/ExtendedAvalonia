@@ -23,10 +23,10 @@ namespace ExtendedAvalonia.Slider
 
                 var pointerPos = e.GetPosition(this).X + (int)min;
 
-                for (int i = 0; i < Thumbs.Count; i++)
+                for (int i = 0; i < _thumbs.Count; i++)
                 {
-                    var t = Thumbs[i];
-                    if (pointerPos > t - _halfThumbSize && pointerPos < t + _halfThumbSize)
+                    var t = _thumbs[i];
+                    if (pointerPos > t - _halfThumbsize && pointerPos < t + _halfThumbsize)
                     {
                         _indexPressed = i;
                         break;
@@ -45,7 +45,7 @@ namespace ExtendedAvalonia.Slider
 
                     var pointerPos = MoveIntoBounds(e.GetPosition(this).X + (int)min, min, max);
 
-                    Thumbs[_indexPressed] = pointerPos;
+                    _thumbs[_indexPressed] = pointerPos;
 
                     DragDelta?.Invoke(sender, e);
 
@@ -59,23 +59,23 @@ namespace ExtendedAvalonia.Slider
 
         public void AddThumb(double position)
         {
-            _toAdd.Add(position);
+            _toAdd.Add(position + _halfThumbsize);
 
             InvalidateVisual();
         }
 
-        private const int _thumbSize = 20;
-        private const int _halfThumbSize = _thumbSize / 2;
+        private const int _thumbsize = 20;
+        private const int _halfThumbsize = _thumbsize / 2;
 
         public override void Render(DrawingContext context)
         {
             base.Render(context);
             var (min, max) = GetMinMax();
 
-            // We add thumbs there because window bounds might not be initialized in ctor
+            // We add _thumbs there because window bounds might not be initialized in ctor
             if (_toAdd.Count > 0)
             {
-                Thumbs.AddRange(_toAdd.Select(x =>
+                _thumbs.AddRange(_toAdd.Select(x =>
                 {
                     return MoveIntoBounds(x, min, max);
                 }));
@@ -93,18 +93,18 @@ namespace ExtendedAvalonia.Slider
 
             var blackColor = System.Drawing.Color.Black.ToArgb();
 
-            // Write thumbs
-            foreach (var pos in Thumbs)
+            // Write _thumbs
+            foreach (var pos in _thumbs)
             {
-                for (int x = -_halfThumbSize; x <= _halfThumbSize; x++)
+                for (int x = -_halfThumbsize; x <= _halfThumbsize; x++)
                 {
                     data[0][(int)pos + x + (int)-min] = blackColor;
                     data[data.Length - 1][(int)pos + x + (int)-min] = blackColor;
                 }
                 for (int y = 0; y < data.Length; y++)
                 {
-                    data[y][(int)pos - _halfThumbSize + (int)-min] = blackColor;
-                    data[y][(int)pos + _halfThumbSize + (int)-min] = blackColor;
+                    data[y][(int)pos - _halfThumbsize + (int)-min] = blackColor;
+                    data[y][(int)pos + _halfThumbsize + (int)-min] = blackColor;
                 }
             }
             // Render data
@@ -114,21 +114,29 @@ namespace ExtendedAvalonia.Slider
 
         public (double min, double max) GetMinMax()
         {
-            var min = -Bounds.Width / 2f + _thumbSize / 2f;
+            var min = -Bounds.Width / 2f + _thumbsize / 2f;
             return (min, -min);
         }
 
         public double MoveIntoBounds(double value, double min, double max)
         {
-            if (value < min + _halfThumbSize) return min + _halfThumbSize;
-            if (value > max + _halfThumbSize - 1) return max + _halfThumbSize - 1;
+            if (value < min + _halfThumbsize) return min + _halfThumbsize;
+            if (value > max + _halfThumbsize - .01) return max + _halfThumbsize - .01;
             return value;
         }
 
         public event EventHandler DragDelta;
 
         private List<double> _toAdd = new();
-        public List<double> Thumbs { get; } = new();
+        private List<double> _thumbs { get; } = new();
+
+        public IEnumerable<double> Thumbs
+        {
+            get
+            {
+                return _thumbs.Select(x => x - _halfThumbsize);
+            }
+        }
 
         private void InitializeComponent()
         {
