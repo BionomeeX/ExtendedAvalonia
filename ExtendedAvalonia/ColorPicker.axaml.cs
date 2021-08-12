@@ -58,7 +58,7 @@ namespace ExtendedAvalonia
         {
             var slider = this.FindControl<ExtendedSlider>("Slider");
 
-            var value = slider.Thumbs.Any() ? slider.Thumbs.ElementAt(0) : 0;
+            var value = slider.Thumbs.Any() ? slider.Thumbs.ElementAt(0) : .5;
 
             // Get between what colors we are in the small bar
             var targetColor = value * (_colors.Length - 1);
