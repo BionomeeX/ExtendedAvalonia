@@ -10,6 +10,13 @@ namespace ExtendedAvalonia.Slider
         public GradientSlider()
         {
             InitializeComponent();
+
+            var upSlider = this.FindControl<ExtendedSlider>("SliderUp");
+            upSlider.AddThumb(0);
+            upSlider.AddThumb(1);
+
+            var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
+            downSlider.AddThumb(0);
         }
 
         public override void Render(Avalonia.Media.DrawingContext context)

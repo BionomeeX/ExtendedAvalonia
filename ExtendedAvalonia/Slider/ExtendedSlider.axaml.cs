@@ -11,11 +11,6 @@ namespace ExtendedAvalonia.Slider
         public ExtendedSlider()
         {
             InitializeComponent();
-
-            this.Initialized += (sender, e) =>
-            {
-                AddThumb(0.5);
-            };
             this.PointerPressed += (sender, e) =>
             {
                 var pointerPos = e.GetPosition(this).X / Max;
@@ -24,7 +19,7 @@ namespace ExtendedAvalonia.Slider
                 for (int i = 0; i < Thumbs.Count; i++)
                 {
                     var t = Thumbs[i];
-                    if (pointerPos > t && pointerPos < t + _thumbsize)
+                    if (pointerPos > t && pointerPos < t + _thumbsize / Max)
                     {
                         _indexPressed = i;
                         break;

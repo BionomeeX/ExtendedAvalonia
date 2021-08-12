@@ -18,6 +18,6 @@
     <v:RenderView Grid.Row="1"
                   Name="Renderer"></v:RenderView>
     <slider:ExtendedSlider Grid.Row="2"
-                      Name="Slider"></slider:ExtendedSlider>
+                      Name="SliderDown"></slider:ExtendedSlider>
   </Grid>
 </UserControl>

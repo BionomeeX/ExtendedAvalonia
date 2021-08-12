@@ -44,10 +44,12 @@ namespace ExtendedAvalonia
 #if DEBUG
             this.AttachDevTools();
 #endif
-            this.FindControl<ExtendedSlider>("Slider").DragDelta += (sender, e) =>
+            var slider = this.FindControl<ExtendedSlider>("Slider");
+            slider.DragDelta += (sender, e) =>
             {
                 DisplayColor();
             };
+            slider.AddThumb(0.5);
             this.Opened += (sender, e) =>
             {
                 DisplayColor();
