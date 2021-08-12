@@ -104,7 +104,6 @@ namespace ExtendedAvalonia.Slider
                     data[y][(int)pos + _halfThumbSize + (int)-min] = blackColor;
                 }
             }
-            var t = Thumbs;
             // Render data
             renderer.RenderData = data;
             renderer.InvalidateVisual();
