@@ -58,8 +58,10 @@ namespace ExtendedAvalonia
             var slider = this.FindControl<ExtendedSlider>("Slider");
             var (min, max) = slider.GetMinMax();
 
+            var value = slider.Thumbs.Count > 0 ? slider.Thumbs[0] : 0;
+
             // Get between what colors we are in the small bar
-            var targetColor = (slider.Thumbs[0] - min) * (_colors.Length - 1) / (max - min);
+            var targetColor = (value - min) * (_colors.Length - 1) / (max - min);
             var minColor = _colors[(int)Math.Floor(targetColor)];
             var maxColor = _colors[(int)Math.Ceiling(targetColor)];
 

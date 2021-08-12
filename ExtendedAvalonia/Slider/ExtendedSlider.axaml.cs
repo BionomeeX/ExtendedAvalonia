@@ -46,6 +46,9 @@ namespace ExtendedAvalonia.Slider
                     var pointerPos = MoveIntoBounds(e.GetPosition(this).X + (int)min, min, max);
 
                     Thumbs[_indexPressed] = pointerPos;
+
+                    DragDelta?.Invoke(sender, e);
+
                     InvalidateVisual();
                 }
             };
