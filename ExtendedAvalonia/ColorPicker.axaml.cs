@@ -91,7 +91,6 @@ namespace ExtendedAvalonia
             }
 
             renderer.RenderData = data;
-            renderer.InvalidateVisual();
 
             this.FindControl<TextBlock>("RGBValues").Text = $"(R: {CurrentColor.R}, G: {CurrentColor.G}, B: {CurrentColor.B})";
         }

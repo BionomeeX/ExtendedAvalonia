@@ -100,7 +100,6 @@ namespace ExtendedAvalonia.Slider
             }
             // Render data
             renderer.RenderData = data;
-            renderer.InvalidateVisual();
         }
 
         private double Max
