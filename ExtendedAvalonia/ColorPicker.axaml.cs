@@ -11,7 +11,7 @@ namespace ExtendedAvalonia
     public partial class ColorPicker : Window
     {
         // Colors displayed by the small bar of the picker
-        private Color[] _colors = new[]
+        private readonly Color[] _colors = new[]
         {
             Color.Red,
             Color.Yellow,
@@ -57,12 +57,11 @@ namespace ExtendedAvalonia
         private void DisplayColor()
         {
             var slider = this.FindControl<ExtendedSlider>("Slider");
-            var (min, max) = slider.GetMinMax();
 
             var value = slider.Thumbs.Any() ? slider.Thumbs.ElementAt(0) : 0;
 
             // Get between what colors we are in the small bar
-            var targetColor = (value - min) * (_colors.Length - 1) / (max - min);
+            var targetColor = value * (_colors.Length - 1);
             var minColor = _colors[(int)Math.Floor(targetColor)];
             var maxColor = _colors[(int)Math.Ceiling(targetColor)];
 
@@ -101,7 +100,7 @@ namespace ExtendedAvalonia
         /// <param name="first">First bound</param>
         /// <param name="second">Second bound</param>
         /// <param name="value">Value between the 2 others, between 0 and 1</param>
-        private byte GetColorValueBetween(byte first, byte second, double value)
+        private static byte GetColorValueBetween(byte first, byte second, double value)
         {
             // Our both bounds are the same, no calculation to do
             if (first == second)
