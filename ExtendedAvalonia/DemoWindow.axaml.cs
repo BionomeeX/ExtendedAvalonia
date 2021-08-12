@@ -12,6 +12,10 @@ namespace ExtendedAvalonia
 #if DEBUG
             this.AttachDevTools();
 #endif
+            this.FindControl<Button>("ColorPicker").Click += (sender, e) =>
+            {
+                ColorPicker.Show(this, (_) => { });
+            };
         }
 
         private void InitializeComponent()

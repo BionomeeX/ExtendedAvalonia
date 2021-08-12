@@ -4,6 +4,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         Width="300" Height="500"
         x:Class="ExtendedAvalonia.DemoWindow"
+        xmlns:slider="using:ExtendedAvalonia.Slider"
         Title="ExtendedAvalonia">
-    Welcome to Avalonia!
+  <StackPanel>
+    <Button Name="ColorPicker">Color Picker</Button>
+    <slider:GradientSlider></slider:GradientSlider>
+  </StackPanel>
 </Window>
