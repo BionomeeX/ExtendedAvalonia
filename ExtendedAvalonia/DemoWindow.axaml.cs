@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using System.Drawing;
 
 namespace ExtendedAvalonia
 {
@@ -14,7 +15,7 @@ namespace ExtendedAvalonia
 #endif
             this.FindControl<Button>("ColorPicker").Click += (sender, e) =>
             {
-                ColorPicker.Show(this, (_) => { });
+                ColorPicker.Show(this, null, Color.Cyan);
             };
         }
 

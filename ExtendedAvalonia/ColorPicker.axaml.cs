@@ -23,7 +23,7 @@ namespace ExtendedAvalonia
         };
         internal Color CurrentColor { private set; get; }
 
-        public static void Show(Window parent, Action<Color> OnCompletion)
+        public static void Show(Window parent, Action<Color> OnCompletion, Color defaultValue)
         {
             var picker = new ColorPicker();
             picker.Show(parent);
@@ -36,6 +36,9 @@ namespace ExtendedAvalonia
                 OnCompletion?.Invoke(picker.CurrentColor);
                 picker.Close();
             };
+
+            var slider = picker.FindControl<ExtendedSlider>("Slider");
+            slider.AddThumb(0.5); // TODO: Need to get the closest value to defaultValue
         }
 
         public ColorPicker()
@@ -49,7 +52,6 @@ namespace ExtendedAvalonia
             {
                 DisplayColor();
             };
-            slider.AddThumb(0.5);
             this.Opened += (sender, e) =>
             {
                 DisplayColor();
