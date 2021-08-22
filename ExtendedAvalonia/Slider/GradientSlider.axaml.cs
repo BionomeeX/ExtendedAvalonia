@@ -4,7 +4,6 @@ using System.Drawing;
 
 namespace ExtendedAvalonia.Slider
 {
-    // https://github.com/funwaywang/WpfRangeSlider
     public partial class GradientSlider : UserControl
     {
         public GradientSlider()
