@@ -73,6 +73,10 @@ namespace ExtendedAvalonia.Slider
 
             var renderer = this.FindControl<RenderView>("Renderer");
 
+            if((int)renderer.Bounds.Width == 0) {
+                return;
+            }
+
             // Initialize drawing array
             int[][] data = new int[(int)renderer.Bounds.Height][];
             for (int y = 0; y < (int)renderer.Bounds.Height; y++)
@@ -88,7 +92,7 @@ namespace ExtendedAvalonia.Slider
                 for (int x = 0; x < _thumbsize; x++) // Draw first and last line
                 {
                     data[0][(int)(pos * Max) + x] = blackColor;
-                    data[^1][(int)(pos * Max)] = blackColor;
+                    data[^1][(int)(pos * Max) + x] = blackColor;
                 }
                 for (int y = 0; y < data.Length; y++) // Draw first and last column
                 {
