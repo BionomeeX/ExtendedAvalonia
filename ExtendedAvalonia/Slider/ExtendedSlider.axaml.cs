@@ -45,7 +45,7 @@ namespace ExtendedAvalonia.Slider
 
                     DragDelta?.Invoke(sender, e);
 
-                    InvalidateVisual();
+                    UpdateRender();
                 }
             };
         }
@@ -57,15 +57,13 @@ namespace ExtendedAvalonia.Slider
         {
             _toAdd.Add(position);
 
-            InvalidateVisual();
+            UpdateRender();
         }
 
         private const int _thumbsize = 20;
 
-        public override void Render(DrawingContext context)
+        private void UpdateRender()
         {
-            base.Render(context);
-
             // We add _thumbs there because window bounds might not be initialized in ctor
             if (_toAdd.Count > 0)
             {
