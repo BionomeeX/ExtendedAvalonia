@@ -10,17 +10,24 @@ namespace ExtendedAvalonia.Slider
         public GradientSlider()
         {
             InitializeComponent();
-
-            var upSlider = this.FindControl<ExtendedSlider>("SliderUp");
-            upSlider.AddThumb(0);
-            upSlider.AddThumb(1);
-
-            var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
-            downSlider.AddThumb(0);
         }
+
+        private bool _isInit;
 
         public override void Render(Avalonia.Media.DrawingContext context)
         {
+            if (!_isInit)
+            {
+                _isInit = true;
+
+                var upSlider = this.FindControl<ExtendedSlider>("SliderUp");
+                upSlider.AddThumb(new Thumb() { Position = 0.0, Color = Color.Transparent });
+                upSlider.AddThumb(new Thumb() { Position = 1.0, Color = Color.Transparent });
+
+                var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
+                downSlider.AddThumb(new Thumb() { Position = 0.0, Color = Color.Transparent });
+            }
+
             // Renderer display a big square of our color
             var renderer = this.FindControl<RenderView>("Renderer");
 

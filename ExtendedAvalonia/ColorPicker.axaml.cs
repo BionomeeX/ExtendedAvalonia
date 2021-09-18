@@ -38,7 +38,7 @@ namespace ExtendedAvalonia
             };
 
             var slider = picker.FindControl<ExtendedSlider>("Slider");
-            slider.AddThumb(0.5); // TODO: Need to get the closest value to defaultValue
+            slider.AddThumb(new() { Position = 0.5, Color = Color.Transparent }); // TODO: Need to get the closest value to defaultValue
         }
 
         public ColorPicker()
@@ -62,7 +62,7 @@ namespace ExtendedAvalonia
         {
             var slider = this.FindControl<ExtendedSlider>("Slider");
 
-            var value = slider.Thumbs.Any() ? slider.Thumbs.ElementAt(0) : .5;
+            var value = slider.Thumbs.Any() ? slider.Thumbs.ElementAt(0).Position : .5;
 
             // Get between what colors we are in the small bar
             var targetColor = value * (_colors.Length - 1);

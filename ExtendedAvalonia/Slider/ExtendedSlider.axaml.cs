@@ -19,7 +19,7 @@ namespace ExtendedAvalonia.Slider
                 for (int i = 0; i < Thumbs.Count; i++)
                 {
                     var t = Thumbs[i];
-                    if (pointerPos > t && pointerPos < t + _thumbsize / Max)
+                    if (pointerPos > t.Position && pointerPos < t.Position + _thumbsize / Max)
                     {
                         _indexPressed = i;
                         break;
@@ -41,7 +41,7 @@ namespace ExtendedAvalonia.Slider
                     if (pointerPos < 0) pointerPos = 0;
                     else if (pointerPos > 1) pointerPos = 1;
 
-                    Thumbs[_indexPressed] = pointerPos;
+                    Thumbs[_indexPressed].Position = pointerPos;
 
                     DragDelta?.Invoke(sender, e);
 
@@ -53,7 +53,7 @@ namespace ExtendedAvalonia.Slider
         // Index of the thumb currently pressed
         private int _indexPressed = -1;
 
-        public void AddThumb(double position)
+        public void AddThumb(Thumb position)
         {
             _toAdd.Add(position);
 
@@ -87,17 +87,22 @@ namespace ExtendedAvalonia.Slider
             var blackColor = System.Drawing.Color.Black.ToArgb();
 
             // Write _thumbs
-            foreach (var pos in Thumbs)
+            foreach (var t in Thumbs)
             {
+                var xPos = (int)(t.Position * Max);
                 for (int x = 0; x < _thumbsize; x++) // Draw first and last line
                 {
-                    data[0][(int)(pos * Max) + x] = blackColor;
-                    data[^1][(int)(pos * Max) + x] = blackColor;
+                    data[0][xPos + x] = blackColor;
+                    data[^1][xPos + x] = blackColor;
+                    for (int y = 1; y < _thumbsize - 1; y++) // Fill
+                    {
+                        data[y][(int)(t.Position * Max) + x] = t.Color.ToArgb();
+                    }
                 }
                 for (int y = 0; y < data.Length; y++) // Draw first and last column
                 {
-                    data[y][(int)(pos * Max)] = blackColor;
-                    data[y][(int)(pos * Max) + _thumbsize - 1] = blackColor;
+                    data[y][xPos] = blackColor;
+                    data[y][xPos + _thumbsize - 1] = blackColor;
                 }
             }
             // Render data
@@ -114,8 +119,8 @@ namespace ExtendedAvalonia.Slider
 
         public event EventHandler DragDelta;
 
-        private readonly List<double> _toAdd = new();
-        public List<double> Thumbs { get; } = new();
+        private readonly List<Thumb> _toAdd = new();
+        public List<Thumb> Thumbs { get; } = new();
 
         private void InitializeComponent()
         {
