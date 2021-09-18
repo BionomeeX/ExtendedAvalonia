@@ -48,9 +48,9 @@ namespace ExtendedAvalonia.Slider
 
             return Color.FromArgb(
                 alpha: 255,
-                red: (int)(percent * min.Color.R + (1 - percent) * max.Color.R),
-                green: (int)(percent * min.Color.G + (1 - percent) * max.Color.G),
-                blue: (int)(percent * min.Color.B + (1 - percent) * max.Color.B)
+                red: (int)(percent * max.Color.R + (1 - percent) * min.Color.R),
+                green: (int)(percent * max.Color.G + (1 - percent) * min.Color.G),
+                blue: (int)(percent * max.Color.B + (1 - percent) * min.Color.B)
             );
         }
 
