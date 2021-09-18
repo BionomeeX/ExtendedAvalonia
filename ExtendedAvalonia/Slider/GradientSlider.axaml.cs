@@ -67,8 +67,18 @@ namespace ExtendedAvalonia.Slider
                 var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
                 downSlider.AddThumb(new Thumb() { Position = 0.0, Color = Color.Red });
                 downSlider.AddThumb(new Thumb() { Position = 1.0, Color = Color.Blue });
+
+                downSlider.DragDelta += (sender, e) =>
+                {
+                    UpdateDisplay();
+                };
             }
 
+            UpdateDisplay();
+        }
+
+        public void UpdateDisplay()
+        {
             // Renderer display a big square of our color
             var renderer = this.FindControl<RenderView>("Renderer");
 
