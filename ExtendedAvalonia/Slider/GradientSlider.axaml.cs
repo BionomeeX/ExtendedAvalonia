@@ -82,14 +82,13 @@ namespace ExtendedAvalonia.Slider
             // Renderer display a big square of our color
             var renderer = this.FindControl<RenderView>("Renderer");
 
+            var rangeValue = Enumerable.Range(0, (int)renderer.Bounds.Width)
+                .Select(x => GetColorFromPosition(x / renderer.Bounds.Width).ToArgb()).ToArray();
+
             int[][] data = new int[(int)renderer.Bounds.Height][];
             for (int y = 0; y < (int)renderer.Bounds.Height; y++)
             {
-                data[y] = new int[(int)renderer.Bounds.Width];
-                for (int x = 0; x < (int)renderer.Bounds.Width; x++)
-                {
-                    data[y][x] = GetColorFromPosition(x / renderer.Bounds.Width).ToArgb();
-                }
+                data[y] = rangeValue;
             }
 
             renderer.RenderData = data;
