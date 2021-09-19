@@ -34,10 +34,6 @@ namespace ExtendedAvalonia
             {
                 picker.Show(parent);
             }
-            picker.Closed += (sender, e) =>
-            {
-                OnCompletion?.Invoke(picker.CurrentColor);
-            };
             picker.FindControl<Button>("Validate").Click += (sender, e) =>
             {
                 OnCompletion?.Invoke(picker.CurrentColor);
