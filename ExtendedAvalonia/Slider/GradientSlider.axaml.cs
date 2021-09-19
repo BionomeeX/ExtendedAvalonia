@@ -78,6 +78,7 @@ namespace ExtendedAvalonia.Slider
                     if (e.Thumb == null)
                     {
                         downSlider.AddThumb(new Thumb() { Position = e.Position, Color = Color.White });
+                        UpdateDisplay();
                     }
                     else
                     {
