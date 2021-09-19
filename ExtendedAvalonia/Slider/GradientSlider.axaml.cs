@@ -75,7 +75,14 @@ namespace ExtendedAvalonia.Slider
 
                 downSlider.OnClick += (sender, e) =>
                 {
-                    ColorPicker.Show(null, c => { e.Thumb.Color = c; UpdateDisplay(); downSlider.UpdateRender(); }, e.Thumb.Color);
+                    if (e.Thumb == null)
+                    {
+                        downSlider.AddThumb(new Thumb() { Position = e.Position, Color = Color.White });
+                    }
+                    else
+                    {
+                        ColorPicker.Show(null, c => { e.Thumb.Color = c; UpdateDisplay(); downSlider.UpdateRender(); }, e.Thumb.Color);
+                    }
                 };
             }
 

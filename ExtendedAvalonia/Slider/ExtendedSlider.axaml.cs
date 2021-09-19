@@ -29,9 +29,13 @@ namespace ExtendedAvalonia.Slider
             };
             this.PointerReleased += (sender, e) =>
             {
-                if (_indexPressed != -1 && _movePos == e.GetPosition(this).X / Max) // Clicked
+                if (_movePos == e.GetPosition(this).X / Max) // Clicked
                 {
-                    OnClick?.Invoke(this, new ThumbEventArgs { Thumb = Thumbs[_indexPressed] });
+                    OnClick?.Invoke(this, new ThumbEventArgs
+                    {
+                        Thumb = _indexPressed == -1 ? null : Thumbs[_indexPressed],
+                        Position = e.GetPosition(this).X / Max
+                    });
                 }
                 _indexPressed = -1;
             };
