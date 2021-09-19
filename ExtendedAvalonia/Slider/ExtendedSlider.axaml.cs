@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using ExtendedAvalonia.Slider.Event;
 using System;
 using System.Collections.Generic;
 
@@ -13,6 +14,7 @@ namespace ExtendedAvalonia.Slider
             this.PointerPressed += (sender, e) =>
             {
                 var pointerPos = e.GetPosition(this).X / Max;
+                _movePos = pointerPos;
 
                 // Check if we clicked on a thumb
                 for (int i = 0; i < Thumbs.Count; i++)
@@ -27,6 +29,10 @@ namespace ExtendedAvalonia.Slider
             };
             this.PointerReleased += (sender, e) =>
             {
+                if (_indexPressed != -1 && _movePos == e.GetPosition(this).X / Max) // Clicked
+                {
+                    OnClick?.Invoke(this, new ThumbEventArgs { Thumb = Thumbs[_indexPressed] });
+                }
                 _indexPressed = -1;
             };
             this.PointerMoved += (sender, e) =>
@@ -51,6 +57,7 @@ namespace ExtendedAvalonia.Slider
 
         // Index of the thumb currently pressed
         private int _indexPressed = -1;
+        private double _movePos; // Used to check if we dragged or clicked
 
         public void AddThumb(Thumb position)
         {
@@ -61,7 +68,7 @@ namespace ExtendedAvalonia.Slider
 
         private const int _thumbsize = 20;
 
-        private void UpdateRender()
+        public void UpdateRender()
         {
             // We add _thumbs there because window bounds might not be initialized in ctor
             if (_toAdd.Count > 0)
@@ -117,6 +124,7 @@ namespace ExtendedAvalonia.Slider
         }
 
         public event EventHandler DragDelta;
+        public event EventHandler<ThumbEventArgs> OnClick;
 
         private readonly List<Thumb> _toAdd = new();
         public List<Thumb> Thumbs { get; } = new();

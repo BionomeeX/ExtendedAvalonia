@@ -26,7 +26,14 @@ namespace ExtendedAvalonia
         public static void Show(Window parent, Action<Color> OnCompletion, Color defaultValue)
         {
             var picker = new ColorPicker();
-            picker.Show(parent);
+            if (parent == null)
+            {
+                picker.Show();
+            }
+            else
+            {
+                picker.Show(parent);
+            }
             picker.Closed += (sender, e) =>
             {
                 OnCompletion?.Invoke(picker.CurrentColor);
