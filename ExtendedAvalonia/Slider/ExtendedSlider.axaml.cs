@@ -123,9 +123,12 @@ namespace ExtendedAvalonia.Slider
                 {
                     data[yPos][xPos + x] = blackColor;
                     data[yPos + _thumbsize - 1][xPos + x] = blackColor;
-                    for (int y = 1; y < _thumbsize - 1; y++) // Fill
+                    if (t.Color.A != 0) // Transparent background, no need to bother
                     {
-                        data[yPos + y][(int)(t.X * Max.X) + x] = t.Color.ToArgb();
+                        for (int y = 1; y < _thumbsize - 1; y++) // Fill
+                        {
+                            data[yPos + y][(int)(t.X * Max.X) + x] = t.Color.ToArgb();
+                        }
                     }
                 }
                 for (int y = 0; y < _thumbsize; y++) // Draw first and last column
