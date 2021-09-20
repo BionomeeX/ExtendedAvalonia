@@ -62,6 +62,12 @@ namespace ExtendedAvalonia
             {
                 DisplayColor();
             };
+
+            var renderer = this.FindControl<ExtendedSlider>("Renderer");
+            renderer.DragDelta += (sender, e) =>
+            {
+                DisplayColor();
+            };
         }
 
         private void DisplayColor()
@@ -83,20 +89,39 @@ namespace ExtendedAvalonia
             var green = GetColorValueBetween(minColor.G, maxColor.G, subTargetColor);
             var blue = GetColorValueBetween(minColor.B, maxColor.B, subTargetColor);
 
-            CurrentColor = Color.FromArgb(255, red, green, blue);
+            var color = Color.FromArgb(255, red, green, blue);
 
             // Renderer display a big square of our color
             var renderer = this.FindControl<ExtendedSlider>("Renderer");
 
             for (int y = 0; y < renderer.Background.Length; y++)
             {
+                var pY = (float)y / renderer.Background.Length;
                 for (int x = 0; x < renderer.Background[y].Length; x++)
                 {
-                    renderer.Background[y][x] = CurrentColor.ToArgb();
+                    var pX = (float)x / renderer.Background[y].Length;
+
+                    renderer.Background[y][x] = Color.FromArgb(255,
+                        red: (int)((1 - pY) * ((1 - pX) * 255 + pX * color.R)),
+                        green: (int)((1 - pY) * ((1 - pX) * 255 + pX * color.G)),
+                        blue: (int)((1 - pY) * ((1 - pX) * 255 + pX * color.B))
+                    ).ToArgb();
                 }
             }
 
             renderer.UpdateRender();
+
+            if (renderer.Thumbs.Any())
+            {
+                var thumb = renderer.Thumbs[0];
+                var ccY = (int)(thumb.Y * (renderer.Background.Length - 1));
+                var ccX = (int)(thumb.X * (renderer.Background[ccY].Length - 1));
+                CurrentColor = Color.FromArgb(renderer.Background[ccY][ccX]);
+            }
+            else
+            {
+                CurrentColor = color;
+            }
 
             this.FindControl<TextBlock>("RGBValues").Text = $"(R: {CurrentColor.R}, G: {CurrentColor.G}, B: {CurrentColor.B})";
         }
