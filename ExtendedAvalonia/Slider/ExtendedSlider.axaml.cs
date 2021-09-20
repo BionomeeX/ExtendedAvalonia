@@ -13,14 +13,15 @@ namespace ExtendedAvalonia.Slider
             InitializeComponent();
             this.PointerPressed += (sender, e) =>
             {
-                var pointerPos = e.GetPosition(this).X / Max;
-                _movePos = pointerPos;
+                (double X, double Y) pos = (e.GetPosition(this).X / Max.X, e.GetPosition(this).Y / Max.Y);
+                _movePos = pos;
 
                 // Check if we clicked on a thumb
                 for (int i = 0; i < Thumbs.Count; i++)
                 {
                     var t = Thumbs[i];
-                    if (pointerPos > t.Position && pointerPos < t.Position + _thumbsize / Max)
+                    if (pos.X > t.X && pos.X < t.X + _thumbsize / Max.X &&
+                        pos.Y > t.Y && pos.Y < t.Y + _thumbsize / Max.Y)
                     {
                         _indexPressed = i;
                         break;
@@ -29,12 +30,13 @@ namespace ExtendedAvalonia.Slider
             };
             this.PointerReleased += (sender, e) =>
             {
-                if (_movePos == e.GetPosition(this).X / Max) // Clicked
+                if (_movePos.X == e.GetPosition(this).X / Max.X && _movePos.Y == e.GetPosition(this).Y / Max.Y) // Clicked
                 {
                     OnClick?.Invoke(this, new ThumbEventArgs
                     {
                         Thumb = _indexPressed == -1 ? null : Thumbs[_indexPressed],
-                        Position = e.GetPosition(this).X / Max
+                        X = e.GetPosition(this).X / Max.X,
+                        Y = e.GetPosition(this).Y / Max.Y
                     });
                 }
                 _indexPressed = -1;
@@ -43,14 +45,25 @@ namespace ExtendedAvalonia.Slider
             {
                 if (_indexPressed != -1)
                 {
-                    var half = _thumbsize / 2f / Max;
-                    // Pointer position will be the middle of the thumb
-                    var pointerPos = e.GetPosition(this).X / Max - half;
+                    { // X
+                        var half = _thumbsize / 2f / Max.X;
+                        // Pointer position will be the middle of the thumb
+                        var pointerPos = e.GetPosition(this).X / Max.X - half;
 
-                    if (pointerPos < 0) pointerPos = 0;
-                    else if (pointerPos > 1) pointerPos = 1;
+                        if (pointerPos < 0) pointerPos = 0;
+                        else if (pointerPos > 1) pointerPos = 1;
 
-                    Thumbs[_indexPressed].Position = pointerPos;
+                        Thumbs[_indexPressed].X = pointerPos;
+                    }
+                    { // Y
+                        var half = _thumbsize / 2f / Max.Y;
+                        var pointerPos = e.GetPosition(this).Y / Max.Y - half;
+
+                        if (pointerPos < 0) pointerPos = 0;
+                        else if (pointerPos > 1) pointerPos = 1;
+
+                        Thumbs[_indexPressed].Y = pointerPos;
+                    }
 
                     DragDelta?.Invoke(sender, e);
 
@@ -61,7 +74,7 @@ namespace ExtendedAvalonia.Slider
 
         // Index of the thumb currently pressed
         private int _indexPressed = -1;
-        private double _movePos; // Used to check if we dragged or clicked
+        private (double X, double Y) _movePos; // Used to check if we dragged or clicked
 
         public void AddThumb(Thumb position)
         {
@@ -104,31 +117,32 @@ namespace ExtendedAvalonia.Slider
             // Write _thumbs
             foreach (var t in Thumbs)
             {
-                var xPos = (int)(t.Position * Max);
+                var xPos = (int)(t.X * Max.X);
+                var yPos = (int)(t.Y * Max.Y);
                 for (int x = 0; x < _thumbsize; x++) // Draw first and last line
                 {
-                    data[0][xPos + x] = blackColor;
-                    data[^1][xPos + x] = blackColor;
+                    data[yPos][xPos + x] = blackColor;
+                    data[yPos + _thumbsize - 1][xPos + x] = blackColor;
                     for (int y = 1; y < _thumbsize - 1; y++) // Fill
                     {
-                        data[y][(int)(t.Position * Max) + x] = t.Color.ToArgb();
+                        data[yPos + y][(int)(t.X * Max.X) + x] = t.Color.ToArgb();
                     }
                 }
-                for (int y = 0; y < data.Length; y++) // Draw first and last column
+                for (int y = 0; y < _thumbsize; y++) // Draw first and last column
                 {
-                    data[y][xPos] = blackColor;
-                    data[y][xPos + _thumbsize - 1] = blackColor;
+                    data[yPos + y][xPos] = blackColor;
+                    data[yPos + y][xPos + _thumbsize - 1] = blackColor;
                 }
             }
             // Render data
             renderer.RenderData = data;
         }
 
-        private double Max
+        private (double X, double Y) Max
         {
             get
             {
-                return Bounds.Width - _thumbsize;
+                return (Bounds.Width - _thumbsize, Bounds.Height - _thumbsize);
             }
         }
 

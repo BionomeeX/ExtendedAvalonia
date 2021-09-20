@@ -4,7 +4,8 @@ namespace ExtendedAvalonia.Slider
 {
     public record Thumb
     {
-        public double Position { set; get; }
+        public double X { set; get; }
+        public double Y { set; get; }
         public Color Color { set; get; }
     }
 }

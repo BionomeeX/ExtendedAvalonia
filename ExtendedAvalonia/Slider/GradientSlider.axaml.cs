@@ -20,23 +20,23 @@ namespace ExtendedAvalonia.Slider
             var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
             Thumb min, max;
 
-            if (downSlider.Thumbs.Any(x => x.Position <= position)) // We found a slider lower than our value
+            if (downSlider.Thumbs.Any(t => t.X <= position)) // We found a slider lower than our value
             {
-                min = downSlider.Thumbs.Where(x => x.Position <= position).OrderByDescending(x => x.Position).ToArray()[0]; // Closest to our left
+                min = downSlider.Thumbs.Where(t => t.X <= position).OrderByDescending(t => t.X).ToArray()[0]; // Closest to our left
             }
             else
             {
-                return downSlider.Thumbs.OrderBy(x => x.Position).ToArray()[0].Color; // Else we can just return the smaller one
+                return downSlider.Thumbs.OrderBy(t => t.X).ToArray()[0].Color; // Else we can just return the smaller one
             }
 
             // Then we do the same for max
-            if (downSlider.Thumbs.Any(x => x.Position >= position))
+            if (downSlider.Thumbs.Any(t => t.X >= position))
             {
-                max = downSlider.Thumbs.Where(x => x.Position >= position).OrderBy(x => x.Position).ToArray()[0];
+                max = downSlider.Thumbs.Where(t => t.X >= position).OrderBy(t => t.X).ToArray()[0];
             }
             else
             {
-                return downSlider.Thumbs.OrderByDescending(x => x.Position).ToArray()[0].Color;
+                return downSlider.Thumbs.OrderByDescending(t => t.X).ToArray()[0].Color;
             }
 
             if (min.Color == max.Color) // Nothing to do since min and max are same color
@@ -44,7 +44,7 @@ namespace ExtendedAvalonia.Slider
                 return min.Color;
             }
 
-            var percent = (position - min.Position) / (max.Position - min.Position); // Percent between 0 and 1
+            var percent = (position - min.X) / (max.X - min.X); // Percent between 0 and 1
 
             return Color.FromArgb(
                 alpha: 255,
@@ -61,12 +61,12 @@ namespace ExtendedAvalonia.Slider
                 _isInit = true;
 
                 var upSlider = this.FindControl<ExtendedSlider>("SliderUp");
-                upSlider.AddThumb(new Thumb() { Position = 0.0, Color = Color.Transparent });
-                upSlider.AddThumb(new Thumb() { Position = 1.0, Color = Color.Transparent });
+                upSlider.AddThumb(new Thumb() { X = 0.0, Color = Color.Transparent });
+                upSlider.AddThumb(new Thumb() { X = 1.0, Color = Color.Transparent });
 
                 var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
-                downSlider.AddThumb(new Thumb() { Position = 0.0, Color = Color.Red });
-                downSlider.AddThumb(new Thumb() { Position = 1.0, Color = Color.Blue });
+                downSlider.AddThumb(new Thumb() { X = 0.0, Color = Color.Red });
+                downSlider.AddThumb(new Thumb() { X = 1.0, Color = Color.Blue });
 
                 downSlider.DragDelta += (sender, e) =>
                 {
@@ -77,7 +77,7 @@ namespace ExtendedAvalonia.Slider
                 {
                     if (e.Thumb == null)
                     {
-                        downSlider.AddThumb(new Thumb() { Position = e.Position, Color = Color.White });
+                        downSlider.AddThumb(new Thumb() { X = e.X, Color = Color.White });
                         UpdateDisplay();
                     }
                     else
