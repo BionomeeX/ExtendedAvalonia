@@ -88,10 +88,25 @@ namespace ExtendedAvalonia.Slider
             }
 
             // Initialize drawing array
-            int[][] data = new int[(int)renderer.Bounds.Height][];
-            for (int y = 0; y < (int)renderer.Bounds.Height; y++)
+            if (Background == null)
             {
-                data[y] = new int[(int)renderer.Bounds.Width];
+                Background = new int[(int)renderer.Bounds.Height][];
+                for (int y = 0; y < (int)renderer.Bounds.Height; y++)
+                {
+                    Background[y] = new int[(int)renderer.Bounds.Width];
+                }
+            }
+
+            // https://stackoverflow.com/a/4671179/6663248
+            var len = Background.Length;
+            var data = new int[len][];
+            for (var x = 0; x < len; x++)
+            {
+                var inner = Background[x];
+                var ilen = inner.Length;
+                var newer = new int[ilen];
+                Array.Copy(inner, newer, ilen);
+                data[x] = newer;
             }
 
             var blackColor = System.Drawing.Color.Black.ToArgb();
@@ -132,6 +147,8 @@ namespace ExtendedAvalonia.Slider
 
         private readonly List<Thumb> _toAdd = new();
         public List<Thumb> Thumbs { get; } = new();
+
+        public int[][] Background { private set; get; }
 
         private void InitializeComponent()
         {
