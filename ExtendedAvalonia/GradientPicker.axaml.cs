@@ -1,19 +1,34 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using ExtendedAvalonia.Slider;
+using System;
 using System.Drawing;
 using System.Linq;
 
-namespace ExtendedAvalonia.Slider
+namespace ExtendedAvalonia
 {
     // https://github.com/funwaywang/WpfRangeSlider
-    public partial class GradientSlider : UserControl
+    public partial class GradientPicker : Window
     {
-        public GradientSlider()
+        public GradientPicker()
         {
             InitializeComponent();
         }
 
         private bool _isInit;
+
+        public static void Show(Window parent, Action<Color> OnCompletion, Color defaultValue)
+        {
+            var picker = new GradientPicker();
+            if (parent == null)
+            {
+                picker.Show();
+            }
+            else
+            {
+                picker.Show(parent);
+            }
+        }
 
         private Color GetColorFromPosition(double position)
         {
@@ -82,7 +97,7 @@ namespace ExtendedAvalonia.Slider
                     }
                     else
                     {
-                        ColorPicker.Show(null, c => { e.Thumb.Color = c; UpdateDisplay(); downSlider.UpdateRender(); }, e.Thumb.Color);
+                        ColorPicker.Show(this, c => { e.Thumb.Color = c; UpdateDisplay(); downSlider.UpdateRender(); }, e.Thumb.Color);
                     }
                 };
             }

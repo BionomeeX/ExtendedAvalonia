@@ -13,8 +13,8 @@
     <Compile Update="DemoWindow.axaml.cs">
       <DependentUpon>DemoWindow.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Slider\GradientSlider.axaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
+    <Compile Update="GradientPicker.axaml.cs">
+      <DependentUpon>GradientPicker.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

@@ -8,6 +8,6 @@
         Title="ExtendedAvalonia">
   <StackPanel>
     <Button Name="ColorPicker">Color Picker</Button>
-    <slider:GradientSlider></slider:GradientSlider>
+    <Button Name="GradientPicker">Gradient Picker</Button>
   </StackPanel>
 </Window>

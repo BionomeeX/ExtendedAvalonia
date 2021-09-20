@@ -17,6 +17,10 @@ namespace ExtendedAvalonia
             {
                 ColorPicker.Show(this, null, Color.Cyan);
             };
+            this.FindControl<Button>("GradientPicker").Click += (sender, e) =>
+            {
+                GradientPicker.Show(this, null, Color.Cyan);
+            };
         }
 
         private void InitializeComponent()
