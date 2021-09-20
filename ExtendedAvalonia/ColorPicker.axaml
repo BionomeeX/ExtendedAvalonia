@@ -15,8 +15,8 @@
       <RowDefinition Height="40" />
     </Grid.RowDefinitions>
 
-    <v:RenderView Grid.Row="0"
-                  Name="Renderer"></v:RenderView>
+    <slider:ExtendedSlider Grid.Row="0"
+                  Name="Renderer"></slider:ExtendedSlider>
 
     <Border Name="ColorBackground"
             Grid.Row="1">

@@ -83,19 +83,17 @@ namespace ExtendedAvalonia
             CurrentColor = Color.FromArgb(255, red, green, blue);
 
             // Renderer display a big square of our color
-            var renderer = this.FindControl<RenderView>("Renderer");
+            var renderer = this.FindControl<ExtendedSlider>("Renderer");
 
-            int[][] data = new int[(int)renderer.Bounds.Height][];
-            for (int y = 0; y < (int)renderer.Bounds.Height; y++)
+            for (int y = 0; y < renderer.Background.Length; y++)
             {
-                data[y] = new int[(int)renderer.Bounds.Width];
-                for (int x = 0; x < (int)renderer.Bounds.Width; x++)
+                for (int x = 0; x < renderer.Background[y].Length; x++)
                 {
-                    data[y][x] = CurrentColor.ToArgb();
+                    renderer.Background[y][x] = CurrentColor.ToArgb();
                 }
             }
 
-            renderer.RenderData = data;
+            renderer.UpdateRender();
 
             this.FindControl<TextBlock>("RGBValues").Text = $"(R: {CurrentColor.R}, G: {CurrentColor.G}, B: {CurrentColor.B})";
         }

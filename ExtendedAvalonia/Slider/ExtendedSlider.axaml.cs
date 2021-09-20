@@ -87,16 +87,6 @@ namespace ExtendedAvalonia.Slider
                 return;
             }
 
-            // Initialize drawing array
-            if (Background == null)
-            {
-                Background = new int[(int)renderer.Bounds.Height][];
-                for (int y = 0; y < (int)renderer.Bounds.Height; y++)
-                {
-                    Background[y] = new int[(int)renderer.Bounds.Width];
-                }
-            }
-
             // https://stackoverflow.com/a/4671179/6663248
             var len = Background.Length;
             var data = new int[len][];
@@ -148,7 +138,23 @@ namespace ExtendedAvalonia.Slider
         private readonly List<Thumb> _toAdd = new();
         public List<Thumb> Thumbs { get; } = new();
 
-        public int[][] Background { private set; get; }
+        private int[][] _background;
+        public int[][] Background
+        {
+            get
+            {
+                if (_background == null)
+                {
+                    var renderer = this.FindControl<RenderView>("Renderer");
+                    _background = new int[(int)renderer.Bounds.Height][];
+                    for (int y = 0; y < (int)renderer.Bounds.Height; y++)
+                    {
+                        _background[y] = new int[(int)renderer.Bounds.Width];
+                    }
+                }
+                return _background;
+            }
+        }
 
         private void InitializeComponent()
         {
