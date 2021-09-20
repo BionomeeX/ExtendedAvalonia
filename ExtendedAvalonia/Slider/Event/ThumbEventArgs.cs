@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Avalonia.Input;
+using System;
 
 namespace ExtendedAvalonia.Slider.Event
 {
@@ -7,5 +8,6 @@ namespace ExtendedAvalonia.Slider.Event
         public Thumb? Thumb { init; get; }
         public double X { init; get; }
         public double Y { init; get; }
+        public MouseButton MouseButton { init; get; }
     }
 }

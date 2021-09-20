@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using ExtendedAvalonia.Slider;
 using System;
@@ -45,22 +46,34 @@ namespace ExtendedAvalonia
 
             downSlider.Click += (sender, e) =>
             {
-                if (e.Thumb == null)
+                if (e.MouseButton == MouseButton.Left)
                 {
-                    ColorPicker.Show(picker, c =>
+                    if (e.Thumb == null) // Add new thumb
                     {
-                        downSlider.AddThumb(new Thumb() { X = e.X, Color = c });
-                        picker.UpdateDisplay();
-                    }, Color.White);
+                        ColorPicker.Show(picker, c =>
+                        {
+                            downSlider.AddThumb(new Thumb() { X = e.X, Color = c });
+                            picker.UpdateDisplay();
+                        }, Color.White);
+                    }
+                    else // Change thumb color
+                    {
+                        ColorPicker.Show(picker, c =>
+                        {
+                            e.Thumb.Color = c;
+                            picker.UpdateDisplay();
+                            downSlider.UpdateRender();
+                        }, e.Thumb.Color);
+                    }
                 }
-                else
+                else if (e.MouseButton == MouseButton.Right)
                 {
-                    ColorPicker.Show(picker, c =>
+                    if (e.Thumb != null) // Delete thumb
                     {
-                        e.Thumb.Color = c;
+                        downSlider.Thumbs.Remove(e.Thumb);
                         picker.UpdateDisplay();
                         downSlider.UpdateRender();
-                    }, e.Thumb.Color);
+                    }
                 }
             };
             picker.FindControl<Button>("Validate").Click += (sender, e) =>
@@ -74,6 +87,11 @@ namespace ExtendedAvalonia
 
         public static Color GetColorFromPosition(IEnumerable<PositionColor> thumbs, double position)
         {
+            if (!thumbs.Any())
+            {
+                return Color.White;
+            }
+
             PositionColor min, max;
 
             if (thumbs.Any(t => t.Position <= position)) // We found a slider lower than our value

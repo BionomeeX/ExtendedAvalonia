@@ -36,7 +36,8 @@ namespace ExtendedAvalonia.Slider
                     {
                         Thumb = _indexPressed == -1 ? null : Thumbs[_indexPressed],
                         X = e.GetPosition(this).X / Max.X,
-                        Y = e.GetPosition(this).Y / Max.Y
+                        Y = e.GetPosition(this).Y / Max.Y,
+                        MouseButton = e.InitialPressMouseButton
                     });
                 }
                 _indexPressed = -1;
