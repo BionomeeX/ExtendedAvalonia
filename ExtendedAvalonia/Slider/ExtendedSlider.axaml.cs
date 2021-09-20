@@ -142,7 +142,9 @@ namespace ExtendedAvalonia.Slider
         {
             get
             {
-                return (Bounds.Width - _thumbsize, Bounds.Height - _thumbsize);
+                var x = Bounds.Width - _thumbsize;
+                var y = Bounds.Height - _thumbsize;
+                return (x == 0 ? .01 : x, y == 0 ? .01 : y);
             }
         }
 
