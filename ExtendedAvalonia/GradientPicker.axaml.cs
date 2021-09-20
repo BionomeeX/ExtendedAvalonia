@@ -12,7 +12,7 @@ namespace ExtendedAvalonia
     {
         public GradientPicker()
         {
-            InitializeComponent();
+            AvaloniaXamlLoader.Load(this);
         }
 
         public static void Show(Window parent, Action<PositionColor[]> OnCompletion, PositionColor[] defaultValue)
@@ -42,7 +42,7 @@ namespace ExtendedAvalonia
                 picker.UpdateDisplay();
             };
 
-            downSlider.OnClick += (sender, e) =>
+            downSlider.Click += (sender, e) =>
             {
                 if (e.Thumb == null)
                 {
@@ -118,11 +118,6 @@ namespace ExtendedAvalonia
 
             renderer.RenderData = data;
             renderer.InvalidateVisual();
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
         }
     }
 }

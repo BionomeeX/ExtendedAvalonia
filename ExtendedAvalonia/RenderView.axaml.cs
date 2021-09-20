@@ -1,8 +1,10 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -10,6 +12,15 @@ namespace ExtendedAvalonia
 {
     public partial class RenderView : UserControl
     {
+        public RenderView()
+        {
+            AvaloniaXamlLoader.Load(this);
+            this.PointerReleased += (e, sender) =>
+            {
+                Click?.Invoke(this, new());
+            };
+        }
+
         public override void Render(DrawingContext context)
         {
             if (_renderData == null)
@@ -32,6 +43,7 @@ namespace ExtendedAvalonia
         }
 
         private int[][] _renderData;
+        public event EventHandler Click;
 
         public int[][] RenderData
         {

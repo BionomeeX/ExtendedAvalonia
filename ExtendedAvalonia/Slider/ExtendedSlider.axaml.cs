@@ -32,7 +32,7 @@ namespace ExtendedAvalonia.Slider
             {
                 if (_movePos.X == e.GetPosition(this).X / Max.X && _movePos.Y == e.GetPosition(this).Y / Max.Y) // Clicked
                 {
-                    OnClick?.Invoke(this, new ThumbEventArgs
+                    Click?.Invoke(this, new ThumbEventArgs
                     {
                         Thumb = _indexPressed == -1 ? null : Thumbs[_indexPressed],
                         X = e.GetPosition(this).X / Max.X,
@@ -152,7 +152,7 @@ namespace ExtendedAvalonia.Slider
         }
 
         public event EventHandler DragDelta;
-        public event EventHandler<ThumbEventArgs> OnClick;
+        public event EventHandler<ThumbEventArgs> Click;
 
         private readonly List<Thumb> _toAdd = new();
         public List<Thumb> Thumbs { get; } = new();
