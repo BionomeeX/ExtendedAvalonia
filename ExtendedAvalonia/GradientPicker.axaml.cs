@@ -47,12 +47,20 @@ namespace ExtendedAvalonia
             {
                 if (e.Thumb == null)
                 {
-                    downSlider.AddThumb(new Thumb() { X = e.X, Color = Color.White });
-                    picker.UpdateDisplay();
+                    ColorPicker.Show(picker, c =>
+                    {
+                        downSlider.AddThumb(new Thumb() { X = e.X, Color = c });
+                        picker.UpdateDisplay();
+                    }, Color.White);
                 }
                 else
                 {
-                    ColorPicker.Show(picker, c => { e.Thumb.Color = c; picker.UpdateDisplay(); downSlider.UpdateRender(); }, e.Thumb.Color);
+                    ColorPicker.Show(picker, c =>
+                    {
+                        e.Thumb.Color = c;
+                        picker.UpdateDisplay();
+                        downSlider.UpdateRender();
+                    }, e.Thumb.Color);
                 }
             };
             picker.FindControl<Button>("Validate").Click += (sender, e) =>
