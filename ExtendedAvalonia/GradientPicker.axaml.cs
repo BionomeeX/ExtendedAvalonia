@@ -15,9 +15,7 @@ namespace ExtendedAvalonia
             InitializeComponent();
         }
 
-        private bool _isInit;
-
-        public static void Show(Window parent, Action<Color> OnCompletion, Color defaultValue)
+        public static void Show(Window parent, Action<PositionColor[]> OnCompletion, PositionColor[] defaultValue)
         {
             var picker = new GradientPicker();
             if (parent == null)
@@ -28,6 +26,41 @@ namespace ExtendedAvalonia
             {
                 picker.Show(parent);
             }
+
+            var upSlider = picker.FindControl<ExtendedSlider>("SliderUp");
+            upSlider.AddThumb(new Thumb() { X = 0.0, Color = Color.Transparent });
+            upSlider.AddThumb(new Thumb() { X = 1.0, Color = Color.Transparent });
+
+            var downSlider = picker.FindControl<ExtendedSlider>("SliderDown");
+            foreach (var pc in defaultValue)
+            {
+                downSlider.AddThumb(new Thumb() { X = pc.Position, Color = pc.Color });
+            }
+
+            downSlider.DragDelta += (sender, e) =>
+            {
+                picker.UpdateDisplay();
+            };
+
+            downSlider.OnClick += (sender, e) =>
+            {
+                if (e.Thumb == null)
+                {
+                    downSlider.AddThumb(new Thumb() { X = e.X, Color = Color.White });
+                    picker.UpdateDisplay();
+                }
+                else
+                {
+                    ColorPicker.Show(picker, c => { e.Thumb.Color = c; picker.UpdateDisplay(); downSlider.UpdateRender(); }, e.Thumb.Color);
+                }
+            };
+            picker.FindControl<Button>("Validate").Click += (sender, e) =>
+            {
+                OnCompletion?.Invoke(downSlider.Thumbs.Select(t => new PositionColor() { Position = t.X, Color = t.Color }).ToArray());
+                picker.Close();
+            };
+
+            picker.UpdateDisplay();
         }
 
         private Color GetColorFromPosition(double position)
@@ -67,42 +100,6 @@ namespace ExtendedAvalonia
                 green: (int)(percent * max.Color.G + (1 - percent) * min.Color.G),
                 blue: (int)(percent * max.Color.B + (1 - percent) * min.Color.B)
             );
-        }
-
-        public override void Render(Avalonia.Media.DrawingContext context)
-        {
-            if (!_isInit)
-            {
-                _isInit = true;
-
-                var upSlider = this.FindControl<ExtendedSlider>("SliderUp");
-                upSlider.AddThumb(new Thumb() { X = 0.0, Color = Color.Transparent });
-                upSlider.AddThumb(new Thumb() { X = 1.0, Color = Color.Transparent });
-
-                var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
-                downSlider.AddThumb(new Thumb() { X = 0.0, Color = Color.Red });
-                downSlider.AddThumb(new Thumb() { X = 1.0, Color = Color.Blue });
-
-                downSlider.DragDelta += (sender, e) =>
-                {
-                    UpdateDisplay();
-                };
-
-                downSlider.OnClick += (sender, e) =>
-                {
-                    if (e.Thumb == null)
-                    {
-                        downSlider.AddThumb(new Thumb() { X = e.X, Color = Color.White });
-                        UpdateDisplay();
-                    }
-                    else
-                    {
-                        ColorPicker.Show(this, c => { e.Thumb.Color = c; UpdateDisplay(); downSlider.UpdateRender(); }, e.Thumb.Color);
-                    }
-                };
-            }
-
-            UpdateDisplay();
         }
 
         public void UpdateDisplay()

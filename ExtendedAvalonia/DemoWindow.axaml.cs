@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using ExtendedAvalonia.Slider;
 using System.Drawing;
 
 namespace ExtendedAvalonia
@@ -19,7 +20,10 @@ namespace ExtendedAvalonia
             };
             this.FindControl<Button>("GradientPicker").Click += (sender, e) =>
             {
-                GradientPicker.Show(this, null, Color.Cyan);
+                GradientPicker.Show(this, null, new PositionColor[]{
+                    new() { Position = 0.0, Color = Color.Red },
+                    new() { Position = 1.0, Color = Color.Blue }
+                });
             };
         }
 

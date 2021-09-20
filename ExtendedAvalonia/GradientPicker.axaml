@@ -11,6 +11,7 @@
       <RowDefinition Height="20" />
       <RowDefinition Height="*" />
       <RowDefinition Height="20" />
+      <RowDefinition Height="40" />
     </Grid.RowDefinitions>
 
     <slider:ExtendedSlider Grid.Row="0"
@@ -19,5 +20,8 @@
                   Name="Renderer"></v:RenderView>
     <slider:ExtendedSlider Grid.Row="2"
                       Name="SliderDown"></slider:ExtendedSlider>
+    <Button Grid.Row="3"
+            HorizontalAlignment="Right"
+            Name="Validate">OK</Button>
   </Grid>
 </Window>
