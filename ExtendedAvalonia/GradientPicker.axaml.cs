@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using ExtendedAvalonia.Slider;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
@@ -63,28 +64,27 @@ namespace ExtendedAvalonia
             picker.UpdateDisplay();
         }
 
-        private Color GetColorFromPosition(double position)
+        public static Color GetColorFromPosition(IEnumerable<PositionColor> thumbs, double position)
         {
-            var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
-            Thumb min, max;
+            PositionColor min, max;
 
-            if (downSlider.Thumbs.Any(t => t.X <= position)) // We found a slider lower than our value
+            if (thumbs.Any(t => t.Position <= position)) // We found a slider lower than our value
             {
-                min = downSlider.Thumbs.Where(t => t.X <= position).OrderByDescending(t => t.X).ToArray()[0]; // Closest to our left
+                min = thumbs.Where(t => t.Position <= position).OrderByDescending(t => t.Position).ToArray()[0]; // Closest to our left
             }
             else
             {
-                return downSlider.Thumbs.OrderBy(t => t.X).ToArray()[0].Color; // Else we can just return the smaller one
+                return thumbs.OrderBy(t => t.Position).ToArray()[0].Color; // Else we can just return the smaller one
             }
 
             // Then we do the same for max
-            if (downSlider.Thumbs.Any(t => t.X >= position))
+            if (thumbs.Any(t => t.Position >= position))
             {
-                max = downSlider.Thumbs.Where(t => t.X >= position).OrderBy(t => t.X).ToArray()[0];
+                max = thumbs.Where(t => t.Position >= position).OrderBy(t => t.Position).ToArray()[0];
             }
             else
             {
-                return downSlider.Thumbs.OrderByDescending(t => t.X).ToArray()[0].Color;
+                return thumbs.OrderByDescending(t => t.Position).ToArray()[0].Color;
             }
 
             if (min.Color == max.Color) // Nothing to do since min and max are same color
@@ -92,7 +92,7 @@ namespace ExtendedAvalonia
                 return min.Color;
             }
 
-            var percent = (position - min.X) / (max.X - min.X); // Percent between 0 and 1
+            var percent = (position - min.Position) / (max.Position - min.Position); // Percent between 0 and 1
 
             return Color.FromArgb(
                 alpha: 255,
@@ -107,8 +107,9 @@ namespace ExtendedAvalonia
             // Renderer display a big square of our color
             var renderer = this.FindControl<RenderView>("Renderer");
 
+            var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
             var rangeValue = Enumerable.Range(0, (int)renderer.Bounds.Width)
-                .Select(x => GetColorFromPosition(x / renderer.Bounds.Width).ToArgb()).ToArray();
+                .Select(x => GetColorFromPosition(downSlider.Thumbs.Select(t => new PositionColor() { Position = t.X, Color = t.Color }), x / renderer.Bounds.Width).ToArgb()).ToArray();
 
             int[][] data = new int[(int)renderer.Bounds.Height][];
             for (int y = 0; y < (int)renderer.Bounds.Height; y++)
