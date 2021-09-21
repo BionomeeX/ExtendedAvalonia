@@ -8,8 +8,30 @@ using System.Linq;
 
 namespace ExtendedAvalonia
 {
-    public partial class ColorPicker : Window
+    public partial class ColorPicker : Window, IPicker<ColorPicker, Color>
     {
+        public static void Show(Window parent, Action<Color> onChange, Action<Color> onCompletion, Color defaultValue)
+            => IPicker<ColorPicker, Color>.Show(parent, onChange, onCompletion, defaultValue);
+
+        private Action<Color> _onChange, _onCompletion;
+        Action<Color> IPicker<ColorPicker, Color>.OnChange { get => _onChange; set => _onChange = value; }
+        Action<Color> IPicker<ColorPicker, Color>.OnCompletion { get => _onCompletion; set => _onCompletion = value; }
+
+        void IPicker<ColorPicker, Color>.Init(Color defaultValue)
+        {
+            this.FindControl<Button>("Validate").Click += (sender, e) =>
+            {
+                _onCompletion?.Invoke(CurrentColor);
+                Close();
+            };
+
+            var slider = this.FindControl<ExtendedSlider>("Slider");
+            slider.AddThumb(new() { X = 0.5, Color = Color.Transparent }); // TODO: Need to get the closest value to defaultValue
+
+            var renderer = this.FindControl<ExtendedSlider>("Renderer");
+            renderer.AddThumb(new() { X = 0.5, Color = Color.Transparent });
+        }
+
         // Colors displayed by the small bar of the picker
         private readonly Color[] _colors = new[]
         {
@@ -22,30 +44,6 @@ namespace ExtendedAvalonia
             Color.Red
         };
         internal Color CurrentColor { private set; get; }
-
-        public static void Show(Window parent, Action<Color> OnCompletion, Color defaultValue)
-        {
-            var picker = new ColorPicker();
-            if (parent == null)
-            {
-                picker.Show();
-            }
-            else
-            {
-                picker.Show(parent);
-            }
-            picker.FindControl<Button>("Validate").Click += (sender, e) =>
-            {
-                OnCompletion?.Invoke(picker.CurrentColor);
-                picker.Close();
-            };
-
-            var slider = picker.FindControl<ExtendedSlider>("Slider");
-            slider.AddThumb(new() { X = 0.5, Color = Color.Transparent }); // TODO: Need to get the closest value to defaultValue
-
-            var renderer = picker.FindControl<ExtendedSlider>("Renderer");
-            renderer.AddThumb(new() { X = 0.5, Color = Color.Transparent });
-        }
 
         public ColorPicker()
         {
@@ -111,16 +109,23 @@ namespace ExtendedAvalonia
 
             renderer.UpdateRender();
 
+            Color newColor;
             if (renderer.Thumbs.Any())
             {
                 var thumb = renderer.Thumbs[0];
                 var ccY = (int)(thumb.Y * (renderer.Background.Length - 1));
                 var ccX = (int)(thumb.X * (renderer.Background[ccY].Length - 1));
-                CurrentColor = Color.FromArgb(renderer.Background[ccY][ccX]);
+                newColor = Color.FromArgb(renderer.Background[ccY][ccX]);
             }
             else
             {
-                CurrentColor = color;
+                newColor = color;
+            }
+
+            if (CurrentColor != newColor)
+            {
+                CurrentColor = newColor;
+                _onChange?.Invoke(newColor);
             }
 
             this.FindControl<TextBlock>("RGBValues").Text = $"(R: {CurrentColor.R}, G: {CurrentColor.G}, B: {CurrentColor.B})";

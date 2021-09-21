@@ -16,11 +16,11 @@ namespace ExtendedAvalonia
 #endif
             this.FindControl<Button>("ColorPicker").Click += (sender, e) =>
             {
-                ColorPicker.Show(this, null, Color.Cyan);
+                ColorPicker.Show(this, null, null, Color.Cyan);
             };
             this.FindControl<Button>("GradientPicker").Click += (sender, e) =>
             {
-                GradientPicker.Show(this, null, new PositionColor[]{
+                GradientPicker.Show(this, null, null, new PositionColor[]{
                     new() { Position = 0.0, Color = Color.Red },
                     new() { Position = 1.0, Color = Color.Blue }
                 });

@@ -10,7 +10,7 @@
     <PackageReference Include="Avalonia.Diagnostics" Version="0.10.6" />
    </ItemGroup>
   <ItemGroup>
-    <Compile Update="DemoWindow.axaml.cs">
+    <Compile Update="Preview\DemoWindow.axaml.cs">
       <DependentUpon>DemoWindow.axaml</DependentUpon>
     </Compile>
     <Compile Update="GradientPicker.axaml.cs">

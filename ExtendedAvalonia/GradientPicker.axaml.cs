@@ -9,31 +9,27 @@ using System.Linq;
 
 namespace ExtendedAvalonia
 {
-    // https://github.com/funwaywang/WpfRangeSlider
-    public partial class GradientPicker : Window
+    public partial class GradientPicker : Window, IPicker<GradientPicker, PositionColor[]>
     {
+        public static void Show(Window parent, Action<PositionColor[]> onChange, Action<PositionColor[]> onCompletion, PositionColor[] defaultValue)
+            => IPicker<GradientPicker, PositionColor[]>.Show(parent, onChange, onCompletion, defaultValue);
+
         public GradientPicker()
         {
             AvaloniaXamlLoader.Load(this);
         }
 
-        public static void Show(Window parent, Action<PositionColor[]> OnCompletion, PositionColor[] defaultValue)
-        {
-            var picker = new GradientPicker();
-            if (parent == null)
-            {
-                picker.Show();
-            }
-            else
-            {
-                picker.Show(parent);
-            }
+        private Action<PositionColor[]> _onChange, _onCompletion;
+        Action<PositionColor[]> IPicker<GradientPicker, PositionColor[]>.OnChange { get => _onChange; set => _onChange = value; }
+        Action<PositionColor[]> IPicker<GradientPicker, PositionColor[]>.OnCompletion { get => _onCompletion; set => _onCompletion = value; }
 
-            var upSlider = picker.FindControl<ExtendedSlider>("SliderUp");
+        void IPicker<GradientPicker, PositionColor[]>.Init(PositionColor[] defaultValue)
+        {
+            var upSlider = this.FindControl<ExtendedSlider>("SliderUp");
             upSlider.AddThumb(new Thumb() { X = 0.0, Color = Color.Transparent });
             upSlider.AddThumb(new Thumb() { X = 1.0, Color = Color.Transparent });
 
-            var downSlider = picker.FindControl<ExtendedSlider>("SliderDown");
+            var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
             foreach (var pc in defaultValue)
             {
                 downSlider.AddThumb(new Thumb() { X = pc.Position, Color = pc.Color });
@@ -41,7 +37,7 @@ namespace ExtendedAvalonia
 
             downSlider.DragDelta += (sender, e) =>
             {
-                picker.UpdateDisplay();
+                UpdateDisplay();
             };
 
             downSlider.Click += (sender, e) =>
@@ -50,18 +46,18 @@ namespace ExtendedAvalonia
                 {
                     if (e.Thumb == null) // Add new thumb
                     {
-                        ColorPicker.Show(picker, c =>
+                        ColorPicker.Show(this, null, c =>
                         {
                             downSlider.AddThumb(new Thumb() { X = e.X, Color = c });
-                            picker.UpdateDisplay();
+                            UpdateDisplay();
                         }, Color.White);
                     }
                     else // Change thumb color
                     {
-                        ColorPicker.Show(picker, c =>
+                        ColorPicker.Show(this, null, c =>
                         {
                             e.Thumb.Color = c;
-                            picker.UpdateDisplay();
+                            UpdateDisplay();
                             downSlider.UpdateRender();
                         }, e.Thumb.Color);
                     }
@@ -71,18 +67,18 @@ namespace ExtendedAvalonia
                     if (e.Thumb != null) // Delete thumb
                     {
                         downSlider.Thumbs.Remove(e.Thumb);
-                        picker.UpdateDisplay();
+                        UpdateDisplay();
                         downSlider.UpdateRender();
                     }
                 }
             };
-            picker.FindControl<Button>("Validate").Click += (sender, e) =>
+            this.FindControl<Button>("Validate").Click += (sender, e) =>
             {
-                OnCompletion?.Invoke(downSlider.Thumbs.Select(t => new PositionColor() { Position = t.X, Color = t.Color }).ToArray());
-                picker.Close();
+                _onCompletion?.Invoke(downSlider.Thumbs.Select(t => new PositionColor() { Position = t.X, Color = t.Color }).ToArray());
+                Close();
             };
 
-            picker.UpdateDisplay();
+            UpdateDisplay();
         }
 
         public static Color GetColorFromPosition(IEnumerable<PositionColor> thumbs, double position)
