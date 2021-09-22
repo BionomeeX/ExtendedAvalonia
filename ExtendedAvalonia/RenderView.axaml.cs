@@ -23,7 +23,7 @@ namespace ExtendedAvalonia
 
         public override void Render(DrawingContext context)
         {
-            if (_renderData == null)
+            if (_renderData == null || _renderData.Length == 0)
             {
                 return;
             }

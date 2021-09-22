@@ -26,10 +26,7 @@ namespace ExtendedAvalonia.Impl
             upSlider.AddThumb(new Thumb() { X = 1.0, Color = Color.Transparent });
 
             var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
-            foreach (var pc in defaultValue)
-            {
-                downSlider.AddThumb(new Thumb() { X = pc.Position, Color = pc.Color });
-            }
+            Reset(defaultValue);
 
             downSlider.DragDelta += (sender, e) =>
             {
@@ -95,6 +92,16 @@ namespace ExtendedAvalonia.Impl
                     }
                 }
             };
+        }
+
+        public void Reset(PositionColor[] positions)
+        {
+            var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
+            downSlider.Thumbs.Clear();
+            foreach (var pc in positions)
+            {
+                downSlider.AddThumb(new Thumb() { X = pc.Position, Color = pc.Color });
+            }
 
             UpdateDisplay();
         }
