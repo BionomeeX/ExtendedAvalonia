@@ -56,6 +56,8 @@ namespace ExtendedAvalonia.Impl
                         picker.OnCancel += (sender, e) =>
                         {
                             downSlider.Thumbs.Remove(newThumb);
+                            UpdateDisplay();
+                            downSlider.UpdateRender();
                         };
                     }
                     else // Change thumb color
