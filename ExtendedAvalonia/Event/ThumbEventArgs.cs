@@ -1,7 +1,8 @@
 ﻿using Avalonia.Input;
+using ExtendedAvalonia.Slider;
 using System;
 
-namespace ExtendedAvalonia.Slider.Event
+namespace ExtendedAvalonia.Event
 {
     public class ThumbEventArgs : EventArgs
     {

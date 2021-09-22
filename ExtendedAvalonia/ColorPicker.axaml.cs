@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using ExtendedAvalonia.Event;
 using ExtendedAvalonia.Slider;
 using System;
 using System.Drawing;
@@ -10,47 +11,25 @@ namespace ExtendedAvalonia
 {
     public partial class ColorPicker : Window, IPicker<ColorPicker, Color>
     {
-        public static void Show(Window parent, Action<Color> onChange, Action<Color> onCompletion, Color defaultValue)
-            => IPicker<ColorPicker, Color>.Show(parent, onChange, onCompletion, defaultValue);
+        public static ColorPicker Show(Window parent, Color defaultValue)
+            => IPicker<ColorPicker, Color>.Show(parent, defaultValue);
 
-        private Action<Color> _onChange, _onCompletion;
-        Action<Color> IPicker<ColorPicker, Color>.OnChange { get => _onChange; set => _onChange = value; }
-        Action<Color> IPicker<ColorPicker, Color>.OnCompletion { get => _onCompletion; set => _onCompletion = value; }
-
-        void IPicker<ColorPicker, Color>.Init(Color defaultValue)
-        {
-            this.FindControl<Button>("Validate").Click += (sender, e) =>
-            {
-                _onCompletion?.Invoke(CurrentColor);
-                Close();
-            };
-
-            var slider = this.FindControl<ExtendedSlider>("Slider");
-            slider.AddThumb(new() { X = 0.5, Color = Color.Transparent }); // TODO: Need to get the closest value to defaultValue
-
-            var renderer = this.FindControl<ExtendedSlider>("Renderer");
-            renderer.AddThumb(new() { X = 0.5, Color = Color.Transparent });
-        }
-
-        // Colors displayed by the small bar of the picker
-        private readonly Color[] _colors = new[]
-        {
-            Color.Red,
-            Color.Yellow,
-            Color.Green,
-            Color.Cyan,
-            Color.Blue,
-            Color.Magenta,
-            Color.Red
-        };
-        internal Color CurrentColor { private set; get; }
+        public event EventHandler<DataEventArgs<Color>> OnChange;
+        public event EventHandler<DataEventArgs<Color>> OnCompletion;
+        public event EventHandler OnCancel;
 
         public ColorPicker()
         {
-            InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
+            AvaloniaXamlLoader.Load(this);
+        }
+
+        void IPicker<ColorPicker, Color>.Init(Color defaultValue)
+        {
+            Closed += (sender, e) =>
+            {
+                OnCancel?.Invoke(sender, e);
+            };
+
             var slider = this.FindControl<ExtendedSlider>("Slider");
             slider.DragDelta += (sender, e) =>
             {
@@ -66,7 +45,31 @@ namespace ExtendedAvalonia
             {
                 DisplayColor();
             };
+
+            this.FindControl<Button>("Validate").Click += (sender, e) =>
+            {
+                OnCompletion?.Invoke(sender, new() { Data = CurrentColor });
+                Close();
+            };
+
+            slider.AddThumb(new() { X = 0.5, Color = Color.Transparent }); // TODO: Need to get the closest value to defaultValue
+
+            renderer.AddThumb(new() { X = 0.5, Color = Color.Transparent });
         }
+
+        // Colors displayed by the small bar of the picker
+        private readonly Color[] _colors = new[]
+        {
+            Color.Red,
+            Color.Yellow,
+            Color.Green,
+            Color.Cyan,
+            Color.Blue,
+            Color.Magenta,
+            Color.Red
+        };
+
+        internal Color CurrentColor { private set; get; }
 
         private void DisplayColor()
         {
@@ -107,8 +110,6 @@ namespace ExtendedAvalonia
                 }
             }
 
-            renderer.UpdateRender();
-
             Color newColor;
             if (renderer.Thumbs.Any())
             {
@@ -125,8 +126,10 @@ namespace ExtendedAvalonia
             if (CurrentColor != newColor)
             {
                 CurrentColor = newColor;
-                _onChange?.Invoke(newColor);
+                OnChange?.Invoke(this, new() { Data = newColor });
             }
+
+            renderer.UpdateRender();
 
             this.FindControl<TextBlock>("RGBValues").Text = $"(R: {CurrentColor.R}, G: {CurrentColor.G}, B: {CurrentColor.B})";
         }

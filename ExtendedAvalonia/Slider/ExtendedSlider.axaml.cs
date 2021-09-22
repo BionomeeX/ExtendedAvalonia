@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using ExtendedAvalonia.Slider.Event;
+using ExtendedAvalonia.Event;
 using System;
 using System.Collections.Generic;
 

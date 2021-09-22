@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using ExtendedAvalonia.Event;
 using System;
 
 namespace ExtendedAvalonia.Slider
@@ -6,7 +7,7 @@ namespace ExtendedAvalonia.Slider
     public interface IPicker<Class, Elem>
         where Class : Window, IPicker<Class, Elem>, new()
     {
-        internal static void Show(Window parent, Action<Elem> onChange, Action<Elem> onCompletion, Elem defaultValue)
+        internal static Class Show(Window parent, Elem defaultValue)
         {
             var picker = new Class();
             if (parent == null)
@@ -18,15 +19,15 @@ namespace ExtendedAvalonia.Slider
                 picker.Show(parent);
             }
 
-            picker.OnChange = onChange;
-            picker.OnCompletion = onCompletion;
-
             picker.Init(defaultValue);
+
+            return picker;
         }
 
         internal void Init(Elem defaultValue);
 
-        internal Action<Elem> OnChange { set; get; }
-        internal Action<Elem> OnCompletion { set; get; }
+        public event EventHandler<DataEventArgs<Elem>> OnChange;
+        public event EventHandler<DataEventArgs<Elem>> OnCompletion;
+        public event EventHandler OnCancel;
     }
 }

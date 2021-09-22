@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
+using ExtendedAvalonia.Event;
 using ExtendedAvalonia.Slider;
 using System;
 using System.Collections.Generic;
@@ -11,20 +12,25 @@ namespace ExtendedAvalonia
 {
     public partial class GradientPicker : Window, IPicker<GradientPicker, PositionColor[]>
     {
-        public static void Show(Window parent, Action<PositionColor[]> onChange, Action<PositionColor[]> onCompletion, PositionColor[] defaultValue)
-            => IPicker<GradientPicker, PositionColor[]>.Show(parent, onChange, onCompletion, defaultValue);
+        public static GradientPicker Show(Window parent, PositionColor[] defaultValue)
+            => IPicker<GradientPicker, PositionColor[]>.Show(parent, defaultValue);
+
+        public event EventHandler<DataEventArgs<PositionColor[]>> OnChange;
+        public event EventHandler<DataEventArgs<PositionColor[]>> OnCompletion;
+        public event EventHandler OnCancel;
 
         public GradientPicker()
         {
             AvaloniaXamlLoader.Load(this);
         }
 
-        private Action<PositionColor[]> _onChange, _onCompletion;
-        Action<PositionColor[]> IPicker<GradientPicker, PositionColor[]>.OnChange { get => _onChange; set => _onChange = value; }
-        Action<PositionColor[]> IPicker<GradientPicker, PositionColor[]>.OnCompletion { get => _onCompletion; set => _onCompletion = value; }
-
         void IPicker<GradientPicker, PositionColor[]>.Init(PositionColor[] defaultValue)
         {
+            Closed += (sender, e) =>
+            {
+                OnCancel?.Invoke(sender, e);
+            };
+
             var upSlider = this.FindControl<ExtendedSlider>("SliderUp");
             upSlider.AddThumb(new Thumb() { X = 0.0, Color = Color.Transparent });
             upSlider.AddThumb(new Thumb() { X = 1.0, Color = Color.Transparent });
@@ -46,20 +52,35 @@ namespace ExtendedAvalonia
                 {
                     if (e.Thumb == null) // Add new thumb
                     {
-                        ColorPicker.Show(this, null, c =>
+                        var picker = ColorPicker.Show(this, Color.White);
+                        picker.OnCompletion += (sender, c) =>
                         {
-                            downSlider.AddThumb(new Thumb() { X = e.X, Color = c });
+                            downSlider.AddThumb(new Thumb() { X = e.X, Color = c.Data });
                             UpdateDisplay();
-                        }, Color.White);
+                        };
                     }
                     else // Change thumb color
                     {
-                        ColorPicker.Show(this, null, c =>
+                        var defaultColor = e.Thumb.Color;
+                        var picker = ColorPicker.Show(this, e.Thumb.Color);
+                        picker.OnCompletion += (sender, c) =>
                         {
-                            e.Thumb.Color = c;
+                            e.Thumb.Color = c.Data;
                             UpdateDisplay();
                             downSlider.UpdateRender();
-                        }, e.Thumb.Color);
+                        };
+                        picker.OnCancel += (sender, c) =>
+                        {
+                            e.Thumb.Color = defaultColor;
+                            UpdateDisplay();
+                            downSlider.UpdateRender();
+                        };
+                        picker.OnChange += (sender, c) =>
+                        {
+                            e.Thumb.Color = c.Data;
+                            UpdateDisplay();
+                            downSlider.UpdateRender();
+                        };
                     }
                 }
                 else if (e.MouseButton == MouseButton.Right)
@@ -74,7 +95,7 @@ namespace ExtendedAvalonia
             };
             this.FindControl<Button>("Validate").Click += (sender, e) =>
             {
-                _onCompletion?.Invoke(downSlider.Thumbs.Select(t => new PositionColor() { Position = t.X, Color = t.Color }).ToArray());
+                OnCompletion?.Invoke(sender, new() { Data = downSlider.Thumbs.Select(t => new PositionColor() { Position = t.X, Color = t.Color }).ToArray() });
                 Close();
             };
 
@@ -140,6 +161,9 @@ namespace ExtendedAvalonia
             }
 
             renderer.RenderData = data;
+
+            OnChange?.Invoke(this, new() { Data = downSlider.Thumbs.Select(t => new PositionColor() { Position = t.X, Color = t.Color }).ToArray() });
+
             renderer.InvalidateVisual();
         }
     }
