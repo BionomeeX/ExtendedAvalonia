@@ -123,8 +123,6 @@ namespace ExtendedAvalonia.Impl
             renderer.RenderData = data;
 
             _onChange?.Invoke(GetData());
-
-            renderer.InvalidateVisual();
         }
     }
 }
