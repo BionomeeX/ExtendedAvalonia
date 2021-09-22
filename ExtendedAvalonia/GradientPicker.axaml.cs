@@ -4,6 +4,9 @@ using ExtendedAvalonia.Event;
 using ExtendedAvalonia.Impl;
 using ExtendedAvalonia.Slider;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 
 namespace ExtendedAvalonia
 {
@@ -45,6 +48,49 @@ namespace ExtendedAvalonia
                 Closed -= OnClose;
                 Close();
             };
+        }
+
+        public static Color GetColorFromPosition(IEnumerable<PositionColor> thumbs, double position)
+        {
+            if (!thumbs.Any())
+            {
+                return Color.White;
+            }
+
+            PositionColor min, max;
+
+            if (thumbs.Any(t => t.Position <= position)) // We found a slider lower than our value
+            {
+                min = thumbs.Where(t => t.Position <= position).OrderByDescending(t => t.Position).ToArray()[0]; // Closest to our left
+            }
+            else
+            {
+                return thumbs.OrderBy(t => t.Position).ToArray()[0].Color; // Else we can just return the smaller one
+            }
+
+            // Then we do the same for max
+            if (thumbs.Any(t => t.Position >= position))
+            {
+                max = thumbs.Where(t => t.Position >= position).OrderBy(t => t.Position).ToArray()[0];
+            }
+            else
+            {
+                return thumbs.OrderByDescending(t => t.Position).ToArray()[0].Color;
+            }
+
+            if (min.Color == max.Color) // Nothing to do since min and max are same color
+            {
+                return min.Color;
+            }
+
+            var percent = (position - min.Position) / (max.Position - min.Position); // Percent between 0 and 1
+
+            return Color.FromArgb(
+                alpha: 255,
+                red: (int)(percent * max.Color.R + (1 - percent) * min.Color.R),
+                green: (int)(percent * max.Color.G + (1 - percent) * min.Color.G),
+                blue: (int)(percent * max.Color.B + (1 - percent) * min.Color.B)
+            );
         }
     }
 }
