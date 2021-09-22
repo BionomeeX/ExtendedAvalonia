@@ -1,8 +1,9 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace ExtendedAvalonia.Slider
 {
-    public struct PositionColor
+    public struct PositionColor : IEquatable<PositionColor>
     {
         public Color Color
         {
@@ -16,6 +17,11 @@ namespace ExtendedAvalonia.Slider
             {
                 return Color.FromArgb(255, R, G, B);
             }
+        }
+
+        public bool Equals(PositionColor other)
+        {
+            return R == other.R && G == other.G && B == other.B && Position == other.Position;
         }
 
         public byte R { set; get; }

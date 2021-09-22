@@ -15,9 +15,9 @@ namespace ExtendedAvalonia.Impl
             AvaloniaXamlLoader.Load(this);
         }
 
-        private Action<PositionColor[]> _onChange;
+        private Action<Gradient> _onChange;
 
-        public void Init(Window me, PositionColor[] defaultValue, Action<PositionColor[]> onChange)
+        public void Init(Window me, Gradient defaultValue, Action<Gradient> onChange)
         {
             _onChange = onChange;
 
@@ -94,11 +94,11 @@ namespace ExtendedAvalonia.Impl
             };
         }
 
-        public void Reset(PositionColor[] positions)
+        public void Reset(Gradient positions)
         {
             var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
             downSlider.Thumbs.Clear();
-            foreach (var pc in positions)
+            foreach (var pc in positions.PositionColors)
             {
                 downSlider.AddThumb(new Thumb() { X = pc.Position, Color = pc.Color });
             }
@@ -106,10 +106,10 @@ namespace ExtendedAvalonia.Impl
             UpdateDisplay();
         }
 
-        public PositionColor[] GetData()
+        public Gradient GetData()
         {
             var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
-            return downSlider.Thumbs.Select(t => new PositionColor() { Position = t.X, Color = t.Color }).ToArray();
+            return new() { PositionColors = downSlider.Thumbs.Select(t => new PositionColor() { Position = t.X, Color = t.Color }).ToArray() };
         }
 
         public void UpdateDisplay()
@@ -119,7 +119,7 @@ namespace ExtendedAvalonia.Impl
 
             var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
             var rangeValue = Enumerable.Range(0, (int)renderer.Bounds.Width)
-                .Select(x => GradientPicker.GetColorFromPosition(downSlider.Thumbs.Select(t => new PositionColor() { Position = t.X, Color = t.Color }), x / renderer.Bounds.Width).ToArgb()).ToArray();
+                .Select(x => GradientPicker.GetColorFromPosition(new() { PositionColors = downSlider.Thumbs.Select(t => new PositionColor() { Position = t.X, Color = t.Color }).ToArray() }, x / renderer.Bounds.Width).ToArgb()).ToArray();
 
             int[][] data = new int[(int)renderer.Bounds.Height][];
             for (int y = 0; y < (int)renderer.Bounds.Height; y++)

@@ -10,13 +10,13 @@ using System.Linq;
 
 namespace ExtendedAvalonia
 {
-    public partial class GradientPicker : Window, IPicker<GradientPicker, PositionColor[]>
+    public partial class GradientPicker : Window, IPicker<GradientPicker, Gradient>
     {
-        public static GradientPicker Show(Window parent, PositionColor[] defaultValue)
-            => IPicker<GradientPicker, PositionColor[]>.Show(parent, defaultValue);
+        public static GradientPicker Show(Window parent, Gradient defaultValue)
+            => IPicker<GradientPicker, Gradient>.Show(parent, defaultValue);
 
-        public event EventHandler<DataEventArgs<PositionColor[]>> OnChange;
-        public event EventHandler<DataEventArgs<PositionColor[]>> OnCompletion;
+        public event EventHandler<DataEventArgs<Gradient>> OnChange;
+        public event EventHandler<DataEventArgs<Gradient>> OnCompletion;
         public event EventHandler OnCancel;
 
         public GradientPicker()
@@ -29,7 +29,7 @@ namespace ExtendedAvalonia
             OnCancel?.Invoke(sender, e);
         }
 
-        void IPicker<GradientPicker, PositionColor[]>.Init(PositionColor[] defaultValue)
+        void IPicker<GradientPicker, Gradient>.Init(Gradient defaultValue)
         {
             Closed += OnClose;
 
@@ -50,8 +50,10 @@ namespace ExtendedAvalonia
             };
         }
 
-        public static Color GetColorFromPosition(IEnumerable<PositionColor> thumbs, double position)
+        public static Color GetColorFromPosition(Gradient gradient, double position)
         {
+            var thumbs = gradient.PositionColors;
+
             if (!thumbs.Any())
             {
                 return Color.White;
