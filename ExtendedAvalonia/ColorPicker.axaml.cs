@@ -111,24 +111,19 @@ namespace ExtendedAvalonia
                 }
             }
 
-            Color newColor;
             if (renderer.Thumbs.Any())
             {
                 var thumb = renderer.Thumbs[0];
                 var ccY = (int)(thumb.Y * (renderer.Background.Length - 1));
                 var ccX = (int)(thumb.X * (renderer.Background[ccY].Length - 1));
-                newColor = Color.FromArgb(renderer.Background[ccY][ccX]);
+                CurrentColor = Color.FromArgb(renderer.Background[ccY][ccX]);
             }
             else
             {
-                newColor = color;
+                CurrentColor = color;
             }
 
-            if (CurrentColor != newColor)
-            {
-                CurrentColor = newColor;
-                OnChange?.Invoke(this, new() { Data = newColor });
-            }
+            OnChange?.Invoke(this, new() { Data = CurrentColor });
 
             renderer.UpdateRender();
 

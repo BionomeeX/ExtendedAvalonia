@@ -55,10 +55,22 @@ namespace ExtendedAvalonia
                     if (e.Thumb == null) // Add new thumb
                     {
                         var picker = ColorPicker.Show(this, Color.White);
+                        var newThumb = new Thumb() { X = e.X, Color = Color.White };
+                        downSlider.AddThumb(newThumb);
+                        UpdateDisplay();
                         picker.OnCompletion += (sender, c) =>
                         {
-                            downSlider.AddThumb(new Thumb() { X = e.X, Color = c.Data });
+                            newThumb.Color = c.Data;
                             UpdateDisplay();
+                        };
+                        picker.OnChange += (sender, c) =>
+                        {
+                            newThumb.Color = c.Data;
+                            UpdateDisplay();
+                        };
+                        picker.OnCancel += (sender, e) =>
+                        {
+                            downSlider.Thumbs.Remove(newThumb);
                         };
                     }
                     else // Change thumb color
