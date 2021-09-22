@@ -24,6 +24,11 @@ namespace ExtendedAvalonia.Slider
             return R == other.R && G == other.G && B == other.B && Position == other.Position;
         }
 
+        public override string ToString()
+        {
+            return $"({R} {G} {B}) ; {Position}";
+        }
+
         public byte R { set; get; }
         public byte G { set; get; }
         public byte B { set; get; }
