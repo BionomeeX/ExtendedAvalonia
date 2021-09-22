@@ -23,19 +23,17 @@ namespace ExtendedAvalonia
             AvaloniaXamlLoader.Load(this);
         }
 
+        private void OnClose(object sender, EventArgs e)
+        {
+            OnCancel?.Invoke(sender, e);
+        }
+
         void IPicker<ColorPicker, Color>.Init(Color defaultValue)
         {
-            Closed += (sender, e) =>
-            {
-                OnCancel?.Invoke(sender, e);
-            };
+            Closed += OnClose;
 
             var slider = this.FindControl<ExtendedSlider>("Slider");
             slider.DragDelta += (sender, e) =>
-            {
-                DisplayColor();
-            };
-            this.Opened += (sender, e) =>
             {
                 DisplayColor();
             };
@@ -49,12 +47,15 @@ namespace ExtendedAvalonia
             this.FindControl<Button>("Validate").Click += (sender, e) =>
             {
                 OnCompletion?.Invoke(sender, new() { Data = CurrentColor });
+                Closed -= OnClose;
                 Close();
             };
 
             slider.AddThumb(new() { X = 0.5, Color = Color.Transparent }); // TODO: Need to get the closest value to defaultValue
 
             renderer.AddThumb(new() { X = 0.5, Color = Color.Transparent });
+
+            DisplayColor();
         }
 
         // Colors displayed by the small bar of the picker

@@ -24,12 +24,14 @@ namespace ExtendedAvalonia
             AvaloniaXamlLoader.Load(this);
         }
 
+        private void OnClose(object sender, EventArgs e)
+        {
+            OnCancel?.Invoke(sender, e);
+        }
+
         void IPicker<GradientPicker, PositionColor[]>.Init(PositionColor[] defaultValue)
         {
-            Closed += (sender, e) =>
-            {
-                OnCancel?.Invoke(sender, e);
-            };
+            Closed += OnClose;
 
             var upSlider = this.FindControl<ExtendedSlider>("SliderUp");
             upSlider.AddThumb(new Thumb() { X = 0.0, Color = Color.Transparent });
@@ -96,6 +98,7 @@ namespace ExtendedAvalonia
             this.FindControl<Button>("Validate").Click += (sender, e) =>
             {
                 OnCompletion?.Invoke(sender, new() { Data = downSlider.Thumbs.Select(t => new PositionColor() { Position = t.X, Color = t.Color }).ToArray() });
+                Closed -= OnClose;
                 Close();
             };
 
