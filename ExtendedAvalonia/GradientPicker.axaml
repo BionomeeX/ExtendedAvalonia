@@ -3,24 +3,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              x:Class="ExtendedAvalonia.GradientPicker"
-             xmlns:v="using:ExtendedAvalonia"
-             xmlns:slider="using:ExtendedAvalonia.Slider"
+             xmlns:impl="using:ExtendedAvalonia.Impl"
              Width="300" Height="300">
   <Grid>
     <Grid.RowDefinitions>
-      <RowDefinition Height="20" />
       <RowDefinition Height="*" />
-      <RowDefinition Height="20" />
       <RowDefinition Height="40" />
     </Grid.RowDefinitions>
 
-    <slider:ExtendedSlider Grid.Row="0"
-                      Name="SliderUp"></slider:ExtendedSlider>
-    <v:RenderView Grid.Row="1"
-                  Name="Renderer"></v:RenderView>
-    <slider:ExtendedSlider Grid.Row="2"
-                      Name="SliderDown"></slider:ExtendedSlider>
-    <Button Grid.Row="3"
+    <impl:GradientPickerImpl Grid.Row="0"
+                             Name="GradientImpl"></impl:GradientPickerImpl>
+    <Button Grid.Row="1"
             HorizontalAlignment="Right"
             Name="Validate">OK</Button>
   </Grid>
