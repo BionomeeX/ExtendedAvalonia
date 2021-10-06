@@ -2,10 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             x:Class="ExtendedAvalonia.Slider.GradientSlider"
-             xmlns:v="using:ExtendedAvalonia"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="300"
              xmlns:slider="using:ExtendedAvalonia.Slider"
-             Width="300" Height="300">
+             xmlns:v="using:ExtendedAvalonia"
+             x:Class="ExtendedAvalonia.Impl.GradientPickerImpl">
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="20" />
@@ -18,6 +18,6 @@
     <v:RenderView Grid.Row="1"
                   Name="Renderer"></v:RenderView>
     <slider:ExtendedSlider Grid.Row="2"
-                      Name="Slider"></slider:ExtendedSlider>
+                      Name="SliderDown"></slider:ExtendedSlider>
   </Grid>
 </UserControl>
