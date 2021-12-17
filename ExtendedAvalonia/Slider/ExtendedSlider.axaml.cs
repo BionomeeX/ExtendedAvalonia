@@ -163,9 +163,9 @@ namespace ExtendedAvalonia.Slider
         {
             get
             {
-                if (_background == null)
+                var renderer = this.FindControl<RenderView>("Renderer");
+                if (_background == null || _background[0].Length != (int)renderer.Bounds.Width) // If not init or resize
                 {
-                    var renderer = this.FindControl<RenderView>("Renderer");
                     _background = new int[(int)renderer.Bounds.Height][];
                     for (int y = 0; y < (int)renderer.Bounds.Height; y++)
                     {
