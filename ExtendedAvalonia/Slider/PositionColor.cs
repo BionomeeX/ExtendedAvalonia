@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Drawing;
+using System.Text.Json.Serialization;
 
 namespace ExtendedAvalonia.Slider
 {
     public struct PositionColor : IEquatable<PositionColor>
     {
+        [JsonIgnore]
         public Color Color
         {
             set
