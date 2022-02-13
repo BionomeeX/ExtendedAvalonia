@@ -20,13 +20,14 @@ namespace ExtendedAvalonia
             };
             this.FindControl<Button>("GradientPicker").Click += (sender, e) =>
             {
-                GradientPicker.Show(this, new()
-                {
-                    PositionColors = new PositionColor[]{
+                GradientPicker.Show(this, new(
+                    new PositionColor[]{
                         new() { Position = 0.0, Color = Color.Red },
                         new() { Position = 1.0, Color = Color.Blue }
-                    }
-                });
+                    }, 
+                    0.0,
+                    0.0
+                ));
             };
         }
 
