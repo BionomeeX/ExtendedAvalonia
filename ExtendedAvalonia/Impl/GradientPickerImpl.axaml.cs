@@ -51,11 +51,13 @@ namespace ExtendedAvalonia.Impl
                         {
                             newThumb.Color = c.Data;
                             UpdateDisplay();
+                            downSlider.UpdateRender();
                         };
                         picker.OnChange += (sender, c) =>
                         {
                             newThumb.Color = c.Data;
                             UpdateDisplay();
+                            downSlider.UpdateRender();
                         };
                         picker.OnCancel += (sender, e) =>
                         {
