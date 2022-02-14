@@ -111,6 +111,11 @@ namespace ExtendedAvalonia.Impl
                 downSlider.AddThumb(new Thumb() { X = pc.Position, Color = pc.Color });
             }
 
+            var upSlider = this.FindControl<ExtendedSlider>("SliderUp");
+            upSlider.Thumbs.Clear();
+            upSlider.AddThumb(new Thumb() { X = positions.Start });
+            upSlider.AddThumb(new Thumb() { X = positions.End });
+
             UpdateDisplay();
         }
 
