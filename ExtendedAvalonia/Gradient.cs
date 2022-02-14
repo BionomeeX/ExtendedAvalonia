@@ -38,7 +38,7 @@ namespace ExtendedAvalonia
             {
                 return false;
             }
-            return other.PositionColors.SequenceEqual(PositionColors);
+            return other.PositionColors.SequenceEqual(PositionColors) && other.Start == Start && other.End == End;
         }
     }
 }
