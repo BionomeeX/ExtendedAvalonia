@@ -126,7 +126,14 @@ namespace ExtendedAvalonia.Impl
             return new(downSlider.Thumbs.Select(t => new PositionColor() { Position = t.X, Color = t.Color }).ToArray(), upSlider.ElementAt(0).X, upSlider.ElementAt(1).X);
         }
 
-        public void UpdateDisplay()
+        public void Invalidate()
+        {
+            UpdateDisplay();
+            this.FindControl<ExtendedSlider>("SliderUp").UpdateRender();
+            this.FindControl<ExtendedSlider>("SliderDown").UpdateRender();
+        }
+
+        private void UpdateDisplay()
         {
             // Renderer display a big square of our color
             var renderer = this.FindControl<RenderView>("Renderer");
