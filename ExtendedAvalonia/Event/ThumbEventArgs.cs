@@ -1,6 +1,5 @@
 ﻿using Avalonia.Input;
 using ExtendedAvalonia.Slider;
-using System;
 
 namespace ExtendedAvalonia.Event
 {

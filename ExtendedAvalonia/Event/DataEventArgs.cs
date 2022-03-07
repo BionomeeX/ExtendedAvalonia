@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ExtendedAvalonia.Event
+﻿namespace ExtendedAvalonia.Event
 {
     public class DataEventArgs<T> : EventArgs
     {

@@ -1,6 +1,5 @@
 ﻿using Avalonia.Controls;
 using ExtendedAvalonia.Event;
-using System;
 
 namespace ExtendedAvalonia
 {

@@ -1,6 +1,4 @@
 ﻿using ExtendedAvalonia.Slider;
-using System;
-using System.Linq;
 
 namespace ExtendedAvalonia
 {

@@ -1,8 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using ExtendedAvalonia.Event;
-using System;
-using System.Collections.Generic;
 
 namespace ExtendedAvalonia.Slider
 {

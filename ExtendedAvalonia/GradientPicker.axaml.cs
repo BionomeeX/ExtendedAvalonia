@@ -3,9 +3,7 @@ using Avalonia.Markup.Xaml;
 using ExtendedAvalonia.Event;
 using ExtendedAvalonia.Impl;
 using ExtendedAvalonia.Slider;
-using System;
 using System.Drawing;
-using System.Linq;
 
 namespace ExtendedAvalonia
 {

@@ -4,8 +4,6 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace ExtendedAvalonia

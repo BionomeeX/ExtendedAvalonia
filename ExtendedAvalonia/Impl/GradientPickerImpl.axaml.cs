@@ -2,9 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using ExtendedAvalonia.Slider;
-using System;
 using System.Drawing;
-using System.Linq;
 
 namespace ExtendedAvalonia.Impl
 {
