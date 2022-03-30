@@ -18,18 +18,9 @@ namespace ExtendedAvalonia.Impl
         public void Init(Window me, Gradient defaultValue, Action<Gradient> onChange)
         {
             _onChange = onChange;
-
-            var upSlider = this.FindControl<ExtendedSlider>("SliderUp");
-            upSlider.AddThumb(new Thumb() { X = 0.0, Color = Color.Transparent });
-            upSlider.AddThumb(new Thumb() { X = 1.0, Color = Color.Transparent });
-
             var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
             Reset(defaultValue);
 
-            upSlider.DragDelta += (sender, e) =>
-            {
-                UpdateDisplay();
-            };
             downSlider.DragDelta += (sender, e) =>
             {
                 UpdateDisplay();
@@ -109,25 +100,18 @@ namespace ExtendedAvalonia.Impl
                 downSlider.AddThumb(new Thumb() { X = pc.Position, Color = pc.Color });
             }
 
-            var upSlider = this.FindControl<ExtendedSlider>("SliderUp");
-            upSlider.Thumbs.Clear();
-            upSlider.AddThumb(new Thumb() { X = positions.Start });
-            upSlider.AddThumb(new Thumb() { X = positions.End });
-
             UpdateDisplay();
         }
 
         public Gradient GetData()
         {
-            var upSlider = this.FindControl<ExtendedSlider>("SliderUp").Thumbs.OrderBy(x => x.X);
             var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
-            return new(downSlider.Thumbs.Select(t => new PositionColor() { Position = t.X, Color = t.Color }).ToArray(), upSlider.ElementAt(0).X, upSlider.ElementAt(1).X);
+            return new(downSlider.Thumbs.Select(t => new PositionColor() { Position = t.X, Color = t.Color }).ToArray());
         }
 
         public void Invalidate()
         {
             UpdateDisplay();
-            this.FindControl<ExtendedSlider>("SliderUp").UpdateRender();
             this.FindControl<ExtendedSlider>("SliderDown").UpdateRender();
         }
 
@@ -136,10 +120,9 @@ namespace ExtendedAvalonia.Impl
             // Renderer display a big square of our color
             var renderer = this.FindControl<RenderView>("Renderer");
 
-            var upSlider = this.FindControl<ExtendedSlider>("SliderUp").Thumbs.OrderBy(x => x.X);
             var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
             var rangeValue = Enumerable.Range(0, (int)renderer.Bounds.Width)
-                .Select(x => GradientPicker.GetColorFromPosition(new(downSlider.Thumbs.Select(t => new PositionColor() { Position = t.X, Color = t.Color }).ToArray(), upSlider.ElementAt(0).X, upSlider.ElementAt(1).X), x / renderer.Bounds.Width).ToArgb()).ToArray();
+                .Select(x => GradientPicker.GetColorFromPosition(new(downSlider.Thumbs.Select(t => new PositionColor() { Position = t.X, Color = t.Color }).ToArray()), x / renderer.Bounds.Width).ToArgb()).ToArray();
 
             int[][] data = new int[(int)renderer.Bounds.Height][];
             for (int y = 0; y < (int)renderer.Bounds.Height; y++)

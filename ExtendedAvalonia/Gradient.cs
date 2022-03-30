@@ -4,8 +4,8 @@ namespace ExtendedAvalonia
 {
     public class Gradient : IEquatable<Gradient>
     {
-        public Gradient(PositionColor[] positionColors, double start, double end)
-            => (_positionColors, Start, End) = (positionColors, start, end);
+        public Gradient(PositionColor[] positionColors)
+            => _positionColors = positionColors;
 
         public PositionColor[] PositionColors
         {
@@ -25,8 +25,6 @@ namespace ExtendedAvalonia
                 return _positionColors;
             }
         }
-        public double Start { set; get; }
-        public double End { set; get; }
 
         private PositionColor[] _positionColors = Array.Empty<PositionColor>();
 
@@ -36,7 +34,7 @@ namespace ExtendedAvalonia
             {
                 return false;
             }
-            return other.PositionColors.SequenceEqual(PositionColors) && other.Start == Start && other.End == End;
+            return other.PositionColors.SequenceEqual(PositionColors);
         }
     }
 }

@@ -24,9 +24,7 @@ namespace ExtendedAvalonia
                     new PositionColor[]{
                         new() { Position = 0.0, Color = Color.Red },
                         new() { Position = 1.0, Color = Color.Blue }
-                    }, 
-                    0.0,
-                    0.0
+                    }
                 ));
             };
         }

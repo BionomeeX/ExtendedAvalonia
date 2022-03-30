@@ -49,15 +49,6 @@ namespace ExtendedAvalonia
 
         public static Color GetColorFromPosition(Gradient gradient, double position)
         {
-            if (position < gradient.Start)
-            {
-                position = gradient.Start;
-            }
-            else if (position > gradient.End)
-            {
-                position = gradient.End;
-            }
-
             var thumbs = gradient.PositionColors;
 
             if (!thumbs.Any())

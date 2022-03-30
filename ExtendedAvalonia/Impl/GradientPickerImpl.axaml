@@ -8,16 +8,13 @@
              x:Class="ExtendedAvalonia.Impl.GradientPickerImpl">
   <Grid>
     <Grid.RowDefinitions>
-      <RowDefinition Height="20" />
       <RowDefinition Height="*" />
       <RowDefinition Height="20" />
     </Grid.RowDefinitions>
 
-    <slider:ExtendedSlider Grid.Row="0"
-                      Name="SliderUp"></slider:ExtendedSlider>
-    <v:RenderView Grid.Row="1"
+    <v:RenderView Grid.Row="0"
                   Name="Renderer"></v:RenderView>
-    <slider:ExtendedSlider Grid.Row="2"
+    <slider:ExtendedSlider Grid.Row="1"
                       Name="SliderDown"></slider:ExtendedSlider>
   </Grid>
 </UserControl>
