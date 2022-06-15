@@ -71,6 +71,24 @@ namespace ExtendedAvalonia.Slider
             };
         }
 
+        internal void ClearAllEvents()
+        {
+            if (DragDelta != null)
+            {
+                foreach (Delegate d in DragDelta.GetInvocationList())
+                {
+                    DragDelta -= (EventHandler)d;
+                }
+            }
+            if (Click != null)
+            {
+                foreach (Delegate d in Click.GetInvocationList())
+                {
+                    Click -= (EventHandler<ThumbEventArgs>)d;
+                }
+            }
+        }
+
         // Index of the thumb currently pressed
         private int _indexPressed = -1;
         private (double X, double Y) _movePos; // Used to check if we dragged or clicked

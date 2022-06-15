@@ -19,6 +19,7 @@ namespace ExtendedAvalonia.Impl
         {
             _onChange = onChange;
             var downSlider = this.FindControl<ExtendedSlider>("SliderDown");
+            downSlider.ClearAllEvents();
             Reset(defaultValue);
 
             downSlider.DragDelta += (sender, e) =>
