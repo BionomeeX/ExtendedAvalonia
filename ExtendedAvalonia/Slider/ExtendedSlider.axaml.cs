@@ -49,17 +49,11 @@ namespace ExtendedAvalonia.Slider
                         // Pointer position will be the middle of the thumb
                         var pointerPos = e.GetPosition(this).X / Max.X - half;
 
-                        if (pointerPos < 0) pointerPos = 0;
-                        else if (pointerPos > 1) pointerPos = 1;
-
                         Thumbs[_indexPressed].X = pointerPos;
                     }
                     { // Y
                         var half = _thumbsize / 2f / Max.Y;
                         var pointerPos = e.GetPosition(this).Y / Max.Y - half;
-
-                        if (pointerPos < 0) pointerPos = 0;
-                        else if (pointerPos > 1) pointerPos = 1;
 
                         Thumbs[_indexPressed].Y = pointerPos;
                     }
