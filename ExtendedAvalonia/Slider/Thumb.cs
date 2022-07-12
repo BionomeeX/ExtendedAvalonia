@@ -10,7 +10,7 @@ namespace ExtendedAvalonia.Slider
         {
             set
             {
-                _x = Math.Clamp(_x, 0, 1);
+                _x = Math.Clamp(value, 0.0, 1.0);
             }
             get => _x;
         }
@@ -18,7 +18,7 @@ namespace ExtendedAvalonia.Slider
         {
             set
             {
-                _y = Math.Clamp(_y, 0, 1);
+                _y = Math.Clamp(value, 0.0, 1.0);
             }
             get => _y;
         }
